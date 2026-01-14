@@ -1,0 +1,39 @@
+{
+    "theme": {
+        "primaryColor": "#6b8cff",
+        "secondaryColor": "#a8c2ff",
+        "backgroundColor": "#f0f5ff",
+        "textColor": "#333366",
+        "lightText": "#666699"
+    },
+    "couple": {
+        "name1": "Jordan",
+        "name2": "Casey",
+        "togetherDate": "2019-09-22"
+    },
+    "message": "From the first moment we met, I knew there was something special about you. Your kindness, your laughter, and the way you see the world have changed my life in ways I never imagined. Every day with you is an adventure, and I'm so grateful to be on this journey by your side.",
+    "memories": [
+        {
+            "date": "September 22, 2019",
+            "title": "The Day We Met",
+            "description": "At the bookstore, of all places. You were looking for a book I loved, and I just had to recommend it to you. We talked for hours that day."
+        },
+        {
+            "date": "March 15, 2020",
+            "title": "Our First Trip Together",
+            "description": "That weekend at the beach was magical. We stayed up all night talking by the fire, and I knew then that I was falling in love with you."
+        },
+        {
+            "date": "December 31, 2020",
+            "title": "New Year's Eve",
+            "description": "Welcoming the new year together, just the two of us. I'll never forget how you looked in the candlelight, laughing at my terrible jokes."
+        },
+        {
+            "date": "June 10, 2021",
+            "title": "Adopting Luna",
+            "description": "The day we brought our little fur baby home. You were so patient with her, and seeing you care for her made me love you even more."
+        }
+    ],
+    "finalNote": "You are my favorite hello and my hardest goodbye. Every moment with you is a treasure, and I can't wait to see what the future holds for us. No matter what comes our way, I know we'll face it together.",
+    "signature": "Forever yours, Jordan"
+}

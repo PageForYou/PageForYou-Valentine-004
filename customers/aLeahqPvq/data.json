@@ -1,0 +1,39 @@
+{
+    "theme": {
+        "primaryColor": "#ff6b8b",
+        "secondaryColor": "#ffb3c6",
+        "backgroundColor": "#fff0f5",
+        "textColor": "#4a4a4a",
+        "lightText": "#7a7a7a"
+    },
+    "couple": {
+        "name1": "Alex",
+        "name2": "Taylor",
+        "togetherDate": "2020-06-15"
+    },
+    "message": "Every love story is beautiful, but ours is my favorite. From the moment we met, I knew there was something special about you. Your smile brightens my darkest days and your love fills my heart with joy. I'm so grateful to have you by my side, today and always.",
+    "memories": [
+        {
+            "date": "June 15, 2020",
+            "title": "Our First Date",
+            "description": "We met at that little coffee shop downtown. I was nervous, but you made me feel at ease with your warm smile and easy conversation."
+        },
+        {
+            "date": "December 24, 2020",
+            "title": "First Christmas Together",
+            "description": "Our first Christmas was magical, even though we couldn't travel. We made cookies, watched holiday movies, and created our own traditions."
+        },
+        {
+            "date": "June 15, 2021",
+            "title": "One Year Anniversary",
+            "description": "I can't believe how quickly a year went by! We celebrated with a picnic in the park where we had our first date."
+        },
+        {
+            "date": "February 14, 2022",
+            "title": "Valentine's Getaway",
+            "description": "The weekend at the mountain cabin was perfect. No phones, no distractions, just us and the beautiful snowy landscape."
+        }
+    ],
+    "finalNote": "Every day with you is a gift I cherish. I look forward to creating many more beautiful memories together. No matter what life brings, I know we'll face it together, hand in hand.",
+    "signature": "With all my love, Alex"
+}

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check for ID parameter
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
+    const isLocal = location.hostname === 'localhost';
     
     const errorMessage = document.getElementById('error-message');
     const phoneContainer = document.querySelector('.phone-container');
@@ -15,14 +16,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const unlockBtn = document.querySelector('.unlock');
     if (unlockBtn) {
+        // Inside the DOMContentLoaded event listener, update the unlock button click handler:
         unlockBtn.addEventListener('click', function() {
             console.log('press unlock');
-            // Add your unlock logic here later
+            const overlay = document.querySelector('.unlock-overlay');
+            overlay.classList.add('active');
+            
+            // Add click handler for fingerprint icon
+            const fingerprintIcon = document.querySelector('.fingerprint-icon');
+            if (fingerprintIcon) {
+                // Remove any existing event listeners to prevent duplicates
+                const newFingerprintIcon = fingerprintIcon.cloneNode(true);
+                fingerprintIcon.parentNode.replaceChild(newFingerprintIcon, fingerprintIcon);
+                
+                newFingerprintIcon.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    console.log('finger scanning');
+                    // Add your fingerprint scanning logic here
+                });
+            }
+        });
+
+        // Close overlay when clicking outside the fingerprint area
+        document.addEventListener('click', function(e) {
+            const overlay = document.querySelector('.unlock-overlay');
+            const fingerprintScan = document.querySelector('.fingerprint-scan');
+            
+            if (overlay.classList.contains('active') && 
+                !fingerprintScan.contains(e.target) &&
+                !e.target.classList.contains('unlock')) {
+                overlay.classList.remove('active');
+            }
         });
     }
     
     // Set profile picture source
-    const profilePicPath = `../../customers/${id}/img/01.jpg`;
+    const profilePicPath = isLocal ? `../../customers/${id}/img/01.jpg` : `../customers/${id}/img/01.jpg`;
     profilePic.src = profilePicPath;
     
     // Handle image loading errors

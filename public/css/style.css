@@ -200,3 +200,47 @@ body {
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25),
                 0 15px 25px -5px rgba(0, 0, 0, 0.15);
 }
+
+.unlock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: none; /* Changed from flex to none */
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 20cqw;
+    z-index: 100;
+    border-radius: 40px;
+    pointer-events: none; /* Allow clicks to pass through when hidden */
+}
+
+.unlock-overlay.active {
+    display: flex; /* Show the overlay */
+    pointer-events: auto; /* Enable interaction when active */
+    animation: fadeIn 0.3s ease;
+}
+
+/* Add this new animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Make sure other elements have proper z-index */
+.notification {
+    z-index: 10;
+}
+
+.unlock {
+    z-index: 20;
+}
+
+.fingerprint-icon {
+    width: 25cqw;
+    height: 25cqw;
+    cursor: pointer;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}

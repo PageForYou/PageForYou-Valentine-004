@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="custom-cursor"></div>
     <div class="container">
         <div class="phone-container">
             <div class="time-text"></div>
             <div class="date-text"></div>
-            <div class="notification">
+            <div class="notification" id="notification">
                 <div class="notification-content">
                     <div class="profile-pic-container">
                         <img id="profile-pic" src="" alt="Profile" class="profile-pic">
@@ -25,7 +26,12 @@
             <div class="unlock"></div>
             <div class="unlock-overlay hidden">
                 <div class="fingerprint-scan">
-                    <img src="assets/img/fingerprint.png" alt="Fingerprint Scan" class="fingerprint-icon">
+                    <div class="fingerprint-container">
+                        <img src="assets/img/fingerprint.png" alt="Fingerprint Scan" class="fingerprint-icon">
+                        <svg class="progress-ring" width="25cqw" height="25cqw">
+                            <circle class="progress-ring__circle" stroke="#4CAF50" stroke-width="2" fill="transparent" r="12.5cqw" cx="12.5cqw" cy="12.5cqw"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,47 +8,133 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneContainer = document.querySelector('.phone-container');
     const profilePic = document.getElementById('profile-pic');
     
+    const SCAN_TIME = 1000;
+
+    const cursor = document.querySelector('.custom-cursor');
+    // Move custom cursor with mouse
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = `${e.clientX}px`;
+        cursor.style.top = `${e.clientY}px`;
+    });
+    // Change cursor on click
+    document.addEventListener('mousedown', () => {
+        document.body.classList.add('clicked');
+    });
+    document.addEventListener('mouseup', () => {
+        document.body.classList.remove('clicked');
+    });
+    // // Hide default cursor and show custom cursor when mouse enters the window
+    // document.addEventListener('mouseenter', () => {
+    //     cursor.style.opacity = '1';
+    // });
+    // // Optional: Hide custom cursor when mouse leaves the window
+    // document.addEventListener('mouseleave', () => {
+    //     cursor.style.opacity = '0';
+    // });
+    // // Make sure cursor is visible by default
+    // cursor.style.opacity = '1';
+    
     if (!id) {
         errorMessage.classList.remove('hidden');
         phoneContainer.classList.add('hidden');
         return;
     }
 
+    function openUnlockOverlay() {
+        const overlay = document.querySelector('.unlock-overlay');
+        overlay.classList.add('active');
+    }
+
     const unlockBtn = document.querySelector('.unlock');
-    if (unlockBtn) {
-        // Inside the DOMContentLoaded event listener, update the unlock button click handler:
-        unlockBtn.addEventListener('click', function() {
-            console.log('press unlock');
-            const overlay = document.querySelector('.unlock-overlay');
-            overlay.classList.add('active');
+    unlockBtn.addEventListener('click', function() {
+        openUnlockOverlay();
+        
+        // Add click handler for fingerprint icon
+        const fingerprintIcon = document.querySelector('.fingerprint-icon');
+        // Remove any existing event listeners to prevent duplicates
+        const newFingerprintIcon = fingerprintIcon.cloneNode(true);
+        fingerprintIcon.parentNode.replaceChild(newFingerprintIcon, fingerprintIcon);
+        
+        // Inside the newFingerprintIcon event listener
+        newFingerprintIcon.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+            document.body.classList.add('clicked');
+
+            const circle = document.querySelector('.progress-ring__circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
             
-            // Add click handler for fingerprint icon
-            const fingerprintIcon = document.querySelector('.fingerprint-icon');
-            if (fingerprintIcon) {
-                // Remove any existing event listeners to prevent duplicates
-                const newFingerprintIcon = fingerprintIcon.cloneNode(true);
-                fingerprintIcon.parentNode.replaceChild(newFingerprintIcon, fingerprintIcon);
-                
-                newFingerprintIcon.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Prevent event bubbling
-                    console.log('finger scanning');
-                    // Add your fingerprint scanning logic here
-                });
-            }
+            // Reset the circle
+            circle.style.strokeDashoffset = circumference;
+            circle.style.transition = `stroke-dashoffset ${SCAN_TIME}ms linear`;
+            
+            // Animate the circle
+            setTimeout(() => {
+                circle.style.strokeDashoffset = '0';
+            }, 10);
+            
+            // Set up the completion handler
+            const onComplete = () => {
+                console.log('finger scan finished');
+                // Reset the circle when done
+                setTimeout(() => {
+                    circle.style.transition = 'none';
+                    circle.style.strokeDashoffset = circumference;
+                }, 100);
+            };
+            
+            // Set a timeout for 2 seconds
+            const scanComplete = setTimeout(onComplete, SCAN_TIME);
+            
+            // Handle mouse up/leave to cancel the scan
+            const cancelScan = () => {
+                clearTimeout(scanComplete);
+                circle.style.transition = 'stroke-dashoffset 0.3s ease';
+                circle.style.strokeDashoffset = circumference;
+                document.removeEventListener('mouseup', cancelScan);
+                document.removeEventListener('mouseleave', cancelScan);
+            };
+            
+            document.addEventListener('mouseup', cancelScan);
+            document.addEventListener('mouseleave', cancelScan);
         });
 
-        // Close overlay when clicking outside the fingerprint area
-        document.addEventListener('click', function(e) {
-            const overlay = document.querySelector('.unlock-overlay');
-            const fingerprintScan = document.querySelector('.fingerprint-scan');
-            
-            if (overlay.classList.contains('active') && 
-                !fingerprintScan.contains(e.target) &&
-                !e.target.classList.contains('unlock')) {
-                overlay.classList.remove('active');
-            }
+        // Prevent context menu on long press
+        newFingerprintIcon.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
         });
-    }
+    });
+
+    document.addEventListener('click', function(e) {
+        const overlay = document.querySelector('.unlock-overlay');
+        const fingerprintScan = document.querySelector('.fingerprint-scan');
+        const notification = document.querySelector('.notification'); // Add this line to get the notification element
+        
+        // If the click is on the notification, don't close the overlay
+        if (e.target.closest('.notification')) {
+            return;
+        }
+        
+        if (overlay.classList.contains('active') && 
+            !fingerprintScan.contains(e.target) &&
+            !e.target.classList.contains('unlock') &&
+            !e.target.closest('.notification')) {  // Additional check for notification
+            
+            // Add fade-out class
+            overlay.classList.add('fade-out');
+            
+            // Remove active class after animation completes
+            setTimeout(() => {
+                overlay.classList.remove('active', 'fade-out');
+            }, 300);
+        }
+    });
+
+    const notification = document.querySelector('.notification');
+    notification.addEventListener('click', function() {
+        openUnlockOverlay();
+    });
     
     // Set profile picture source
     const profilePicPath = isLocal ? `../../customers/${id}/img/01.jpg` : `../customers/${id}/img/01.jpg`;
@@ -89,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.classList.remove('hidden');
         // Update immediately and then every minute
         updateDateTime();
-        setInterval(updateDateTime, 60000);
+        setInterval(updateDateTime, 6000);
         
         // Add animation class after a short delay to make it look like a real notification
         setTimeout(() => {

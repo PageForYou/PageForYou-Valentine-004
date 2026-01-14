@@ -1,8 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Hide default cursor */
+html, body * {
+    cursor: none !important;
+}
+
+/* Custom cursor */
+.custom-cursor {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    background-image: url('../assets/img/hand_cursor_unclick_32.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-10%, 0);
+    transition: transform 0.1s ease;
+}
+
+body.clicked .custom-cursor {
+    background-image: url('../assets/img/hand_cursor_click_32.png');
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+html, body {
+    cursor: url('../assets/img/hand_cursor_unclick_32.png') 8 8, auto;
+    transition: cursor 0.1s ease;
+}
+html:active, body:active {
+    cursor: url('../assets/img/hand_cursor_click_32.png') 8 8, auto;
+}
+input, button, textarea, select, a {
+    cursor: inherit !important;
 }
 
 body {
@@ -182,7 +221,6 @@ body {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -208,7 +246,9 @@ body {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.9);
-    display: none; /* Changed from flex to none */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     justify-content: center;
     align-items: flex-end;
     padding-bottom: 20cqw;
@@ -220,7 +260,16 @@ body {
 .unlock-overlay.active {
     display: flex; /* Show the overlay */
     pointer-events: auto; /* Enable interaction when active */
+    opacity: 1;
     animation: fadeIn 0.3s ease;
+}
+.unlock-overlay.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+    pointer-events: none;
+}
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* Add this new animation */
@@ -229,18 +278,45 @@ body {
     to { opacity: 1; }
 }
 
-/* Make sure other elements have proper z-index */
-.notification {
-    z-index: 10;
-}
-
 .unlock {
     z-index: 20;
 }
 
 .fingerprint-icon {
+    width: 24cqw;
+    height: 24cqw;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.fingerprint-container {
+    position: relative;
     width: 25cqw;
     height: 25cqw;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.progress-ring__circle {
+    stroke-dasharray: 78.54cqw; /* 2πr where r is 12.5cqw (25cqw/2) */
+    stroke-dashoffset: 78.54cqw; /* Start with the circle fully offset (invisible) */
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.1s linear;
+    stroke-width: 4;
+}
+
+.fingerprint-icon {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    position: relative;
+    z-index: 1;
 }

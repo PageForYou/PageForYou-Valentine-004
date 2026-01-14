@@ -157,6 +157,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('mouseleave', cancelScan);
     });
 
+    newFingerprintIcon.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        // Trigger the mousedown event
+        const event = new MouseEvent('mousedown');
+        this.dispatchEvent(event);
+    }, { passive: false });
+    // Update the existing contextmenu event listener
+    newFingerprintIcon.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    });
+
     // Prevent context menu on long press
     newFingerprintIcon.addEventListener('contextmenu', function(e) {
         e.preventDefault();

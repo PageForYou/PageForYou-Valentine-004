@@ -311,12 +311,96 @@ body {
     stroke-dashoffset: 78.54cqw; /* Start with the circle fully offset (invisible) */
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-    transition: stroke-dashoffset 0.1s linear;
+    transition: stroke-dashoffset 0.1s linear, stroke-width 0.3s ease;
     stroke-width: 4;
+    stroke: #4CAF50;
 }
 
 .fingerprint-icon {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
     position: relative;
     z-index: 1;
+}
+
+/* Identification Popup */
+.identification {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%) scale(0) translateY(-50%);
+    width: 90%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 5cqw;
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.2),
+                0 10px 20px -10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 20;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
+    display: none;
+}
+
+.identification.show {
+    opacity: 1;
+    top: 25%;
+    transform: translateX(-50%) scale(1) translateY(0);
+}
+
+.identification-content {
+    display: flex;
+    gap: 4cqw;
+    align-items: center;
+}
+
+.identification-profile {
+    width: 33cqw;
+    height: 33cqw;
+    border-radius: 15px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.identification-profile .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.identification-details {
+    flex: 1;
+    color: #333;
+}
+
+.identification-details h3 {
+    font-size: 4.5cqw;
+    margin: 0 0 1.5cqw 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.identification-details p {
+    margin: 1.2cqw 0;
+    font-size: 3.8cqw;
+    color: #555;
+    line-height: 1.4;
+}
+
+.identification-details p:first-of-type {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 4cqw;
+    margin-top: 0.5cqw;
+}
+
+/* Keep the progress ring full after scan */
+.fingerprint-container.scan-complete .progress-ring__circle {
+    stroke-width: 6;
+    stroke: #4CAF50;
+    filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
 }

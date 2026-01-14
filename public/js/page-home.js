@@ -48,78 +48,143 @@ document.addEventListener('DOMContentLoaded', function() {
     const unlockBtn = document.querySelector('.unlock');
     unlockBtn.addEventListener('click', function() {
         openUnlockOverlay();
-        
-        // Add click handler for fingerprint icon
-        const fingerprintIcon = document.querySelector('.fingerprint-icon');
-        // Remove any existing event listeners to prevent duplicates
-        const newFingerprintIcon = fingerprintIcon.cloneNode(true);
-        fingerprintIcon.parentNode.replaceChild(newFingerprintIcon, fingerprintIcon);
-        
-        // Inside the newFingerprintIcon event listener
-        newFingerprintIcon.addEventListener('mousedown', function(e) {
-            e.stopPropagation();
-            document.body.classList.add('clicked');
+    });
 
-            const circle = document.querySelector('.progress-ring__circle');
-            const radius = circle.r.baseVal.value;
-            const circumference = 2 * Math.PI * radius;
+    const notification = document.querySelector('.notification');
+    notification.addEventListener('click', function() {
+        openUnlockOverlay();
+    });
+
+    // Add click handler for fingerprint icon
+    const fingerprintIcon = document.querySelector('.fingerprint-icon');
+    // Remove any existing event listeners to prevent duplicates
+    const newFingerprintIcon = fingerprintIcon.cloneNode(true);
+    fingerprintIcon.parentNode.replaceChild(newFingerprintIcon, fingerprintIcon);
+    
+    // Inside the newFingerprintIcon event listener
+    newFingerprintIcon.addEventListener('mousedown', function(e) {
+        e.stopPropagation();
+        document.body.classList.add('clicked');
+
+        const circle = document.querySelector('.progress-ring__circle');
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const overlay = document.querySelector('.unlock-overlay');
+
+        if (overlay.dataset.scanInProgress === 'true') return;
+        
+        // Set flag to prevent overlay closure
+        overlay.dataset.scanInProgress = 'true';
+        
+        // Reset the circle
+        circle.style.strokeDashoffset = circumference;
+        circle.style.transition = `stroke-dashoffset ${SCAN_TIME}ms linear`;
+        
+        // Animate the circle
+        setTimeout(() => {
+            circle.style.strokeDashoffset = '0';
+        }, 10);
+        
+        // Create identification popup if it doesn't exist
+        const partnerProfilePicPath = isLocal ? `../../customers/${id}/img/02.jpg` : `../customers/${id}/img/02.jpg`;
+        let identification = document.querySelector('.identification');
+        if (!identification) {
+            identification = document.createElement('div');
+            identification.className = 'identification';
+            identification.innerHTML = `
+                <div class="identification-content">
+                    <div class="identification-profile">
+                        <img src="${partnerProfilePicPath}" alt="Profile" class="profile-pic">
+                    </div>
+                    <div class="identification-details">
+                        <h3>Fingerprint Data</h3>
+                        <p>John Doe</p>
+                        <p>Male • 25 years old</p>
+                        <p>Partner of Jane Smith</p>
+                        <p>Together for 3 years</p>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.unlock-overlay').appendChild(identification);
+        }
+        
+        // Set up the completion handler
+        const onComplete = () => {
+            console.log('finger scan finished');
+            // Keep the circle full
+            circle.style.transition = 'all 0.3s ease';
+            circle.style.strokeDashoffset = '0';
+            overlay.dataset.scanFinished = 'true';
             
-            // Reset the circle
-            circle.style.strokeDashoffset = circumference;
-            circle.style.transition = `stroke-dashoffset ${SCAN_TIME}ms linear`;
-            
-            // Animate the circle
+            // Show identification popup with animation
             setTimeout(() => {
-                circle.style.strokeDashoffset = '0';
-            }, 10);
+                identification.style.display = 'block';
+                void identification.offsetWidth; // Trigger reflow
+                identification.classList.add('show');
+            }, 300);
             
-            // Set up the completion handler
-            const onComplete = () => {
-                console.log('finger scan finished');
-                // Reset the circle when done
+            // Allow overlay closure after scan is complete
+            setTimeout(() => {
+                overlay.dataset.scanInProgress = 'false';
+                overlay.dataset.scanFinished = 'false';
+            }, 4000);
+        };
+        
+        // Set a timeout for the scan
+        const scanComplete = setTimeout(onComplete, SCAN_TIME);
+        
+        // Handle mouse up/leave to cancel the scan
+        const cancelScan = () => {
+            if (overlay.dataset.scanFinished === 'true') return;
+            clearTimeout(scanComplete);
+            circle.style.transition = 'stroke-dashoffset 0.3s ease';
+            circle.style.strokeDashoffset = circumference;
+            document.removeEventListener('mouseup', cancelScan);
+            document.removeEventListener('mouseleave', cancelScan);
+            overlay.dataset.scanInProgress = 'false';
+            
+            // Hide identification popup if visible
+            const identification = document.querySelector('.identification');
+            if (identification) {
+                identification.classList.remove('show');
                 setTimeout(() => {
-                    circle.style.transition = 'none';
-                    circle.style.strokeDashoffset = circumference;
-                }, 100);
-            };
-            
-            // Set a timeout for 2 seconds
-            const scanComplete = setTimeout(onComplete, SCAN_TIME);
-            
-            // Handle mouse up/leave to cancel the scan
-            const cancelScan = () => {
-                clearTimeout(scanComplete);
-                circle.style.transition = 'stroke-dashoffset 0.3s ease';
-                circle.style.strokeDashoffset = circumference;
-                document.removeEventListener('mouseup', cancelScan);
-                document.removeEventListener('mouseleave', cancelScan);
-            };
-            
-            document.addEventListener('mouseup', cancelScan);
-            document.addEventListener('mouseleave', cancelScan);
-        });
+                    identification.style.display = 'none';
+                }, 300);
+            }
+        };
+        
+        document.addEventListener('mouseup', cancelScan);
+        document.addEventListener('mouseleave', cancelScan);
+    });
 
-        // Prevent context menu on long press
-        newFingerprintIcon.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
+    // Prevent context menu on long press
+    newFingerprintIcon.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
     });
 
     document.addEventListener('click', function(e) {
         const overlay = document.querySelector('.unlock-overlay');
+        if (overlay.dataset.scanInProgress === 'true') return;
         const fingerprintScan = document.querySelector('.fingerprint-scan');
-        const notification = document.querySelector('.notification'); // Add this line to get the notification element
+        const notification = document.querySelector('.notification');
+        const identification = document.querySelector('.identification');
         
-        // If the click is on the notification, don't close the overlay
-        if (e.target.closest('.notification')) {
+        // Don't close if click is on notification, identification, or during scan
+        if (e.target.closest('.notification') || 
+            e.target.closest('.identification') ||
+            overlay.dataset.scanInProgress === 'true') {
             return;
         }
         
         if (overlay.classList.contains('active') && 
             !fingerprintScan.contains(e.target) &&
-            !e.target.classList.contains('unlock') &&
-            !e.target.closest('.notification')) {  // Additional check for notification
+            !e.target.classList.contains('unlock')) {
+            
+            // Hide identification popup if visible
+            if (identification) {
+                identification.classList.remove('show');
+            }
             
             // Add fade-out class
             overlay.classList.add('fade-out');
@@ -127,13 +192,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove active class after animation completes
             setTimeout(() => {
                 overlay.classList.remove('active', 'fade-out');
+                // Reset scan state when overlay is closed
+                overlay.dataset.scanInProgress = 'false';
+                // Reset progress ring
+                const circle = document.querySelector('.progress-ring__circle');
+                if (circle) {
+                    const radius = circle.r.baseVal.value;
+                    const circumference = 2 * Math.PI * radius;
+                    circle.style.transition = 'none';
+                    circle.style.strokeDashoffset = circumference;
+                }
             }, 300);
         }
-    });
-
-    const notification = document.querySelector('.notification');
-    notification.addEventListener('click', function() {
-        openUnlockOverlay();
     });
     
     // Set profile picture source

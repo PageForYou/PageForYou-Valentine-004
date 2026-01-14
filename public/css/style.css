@@ -415,6 +415,10 @@ body {
     html, body {
         cursor: url('../assets/img/hand_cursor_unclick_32.png') 8 8, auto;
         transition: cursor 0.1s ease;
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* Prevent scrolling */
+        position: fixed; /* This prevents the white space issue */
     }
     html:active, body:active {
         cursor: url('../assets/img/hand_cursor_click_32.png') 8 8, auto;

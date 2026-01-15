@@ -1,3 +1,42 @@
+// Function to reset scan and show phone menu
+function resetScanAndShowMenu() {
+    const overlay = document.querySelector('.unlock-overlay');
+    const identification = document.querySelector('.identification');
+    const circle = document.querySelector('.progress-ring__circle');
+    const phoneMenu = document.getElementById('phoneMenu');
+    
+    // Reset progress ring
+    if (circle) {
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.transition = 'none';
+        circle.style.strokeDashoffset = circumference;
+    }
+    
+    // Hide identification popup with animation
+    if (identification) {
+        identification.classList.remove('show');
+        setTimeout(() => {
+            identification.style.display = 'none';
+        }, 300);
+    }
+    
+    // Hide overlay with fade out
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+        overlay.classList.remove('active', 'fade-out');
+        overlay.dataset.scanInProgress = 'false';
+    }, 300);
+    
+    // Show phone menu
+    setTimeout(() => {
+        phoneMenu.style.display = 'block';
+        // Trigger reflow
+        void phoneMenu.offsetWidth;
+        phoneMenu.classList.add('visible');
+    }, 100);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check for ID parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -93,26 +132,71 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Create identification popup if it doesn't exist
         const partnerProfilePicPath = isLocal ? `../../customers/${id}/img/02.jpg` : `../customers/${id}/img/02.jpg`;
-        let identification = document.querySelector('.identification');
-        if (!identification) {
-            identification = document.createElement('div');
-            identification.className = 'identification';
-            identification.innerHTML = `
-                <div class="identification-content">
-                    <div class="identification-profile">
-                        <img src="${partnerProfilePicPath}" alt="Profile" class="profile-pic">
-                    </div>
-                    <div class="identification-details">
-                        <h3>Fingerprint Data</h3>
-                        <p>John Doe</p>
-                        <p>Male • 25 years old</p>
-                        <p>Partner of Jane Smith</p>
-                        <p>Together for 3 years</p>
-                    </div>
-                </div>
-            `;
-            document.querySelector('.unlock-overlay').appendChild(identification);
-        }
+        const dataPath = isLocal ? `../../customers/${id}/data.json` : `../customers/${id}/data.json`;
+        
+        // Fetch identification data from JSON
+        fetch(dataPath)
+            .then(response => response.json())
+            .then(data => {
+                let identification = document.querySelector('.identification');
+                if (!identification) {
+                    identification = document.createElement('div');
+                    identification.className = 'identification';
+                    
+                    // Generate HTML from identification data
+                    const detailsHTML = data.identification.map(item => {
+                        if (item.title === 'Personal Information') {
+                            return `<h3>${item.text || item.title}</h3>`;
+                        }
+                        return `<p>${item.title}${item.text}</p>`;
+                    }).join('');
+                    
+                    identification.innerHTML = `
+                        <div class="identification-content">
+                            <div class="identification-profile">
+                                <img src="${partnerProfilePicPath}" alt="Profile" class="profile-pic">
+                            </div>
+                            <div class="identification-details">
+                                ${detailsHTML}
+                                <div class="verification-status">
+                                    <span class="verification-icon">
+                                        <img src="assets/img/loading_icon.png" alt="Loading" class="loading-icon">
+                                    </span>
+                                    <span class="verification-text">กำลังตรวจสอบ...</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelector('.unlock-overlay').appendChild(identification);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading identification data:', error);
+                // Fallback to default content if there's an error
+                let identification = document.querySelector('.identification');
+                if (!identification) {
+                    identification = document.createElement('div');
+                    identification.className = 'identification';
+                    identification.innerHTML = `
+                        <div class="identification-content">
+                            <div class="identification-profile">
+                                <img src="${partnerProfilePicPath}" alt="Profile" class="profile-pic">
+                            </div>
+                            <div class="identification-details">
+                                <h3>Fingerprint Data</h3>
+                                <p>Error loading identification data</p>
+                                <div class="verification-status">
+                                    <span class="verification-icon">
+                                        <img src="assets/img/loading_icon.png" alt="Loading" class="loading-icon">
+                                    </span>
+                                    <span class="verification-text">กำลังตรวจสอบ...</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelector('.unlock-overlay').appendChild(identification);
+                }
+            });
         
         // Set up the completion handler
         const onComplete = () => {
@@ -123,10 +207,27 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.dataset.scanFinished = 'true';
             
             // Show identification popup with animation
+            const identification = document.querySelector('.identification');
             setTimeout(() => {
                 identification.style.display = 'block';
                 void identification.offsetWidth; // Trigger reflow
                 identification.classList.add('show');
+                
+                // After 3 seconds, update to success state
+                setTimeout(() => {
+                    const verificationIcon = identification.querySelector('.verification-icon');
+                    const verificationText = identification.querySelector('.verification-text');
+                    
+                    if (verificationIcon && verificationText) {
+                        verificationIcon.innerHTML = '✓';
+                        verificationText.textContent = 'ตรวจสอบสำเร็จ';
+                        identification.classList.add('verification-success');
+                        console.log('open phone menu');
+                        
+                        // Reset scan and show phone menu after a short delay
+                        setTimeout(resetScanAndShowMenu, 500);
+                    }
+                }, 3000);
             }, 300);
             
             // Allow overlay closure after scan is complete

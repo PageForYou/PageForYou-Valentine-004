@@ -1,0 +1,36 @@
+/* Phone Menu Styles */
+.phone-menu-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background-color: white;
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 24px;
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.phone-menu-overlay.visible {
+    display: block;
+    opacity: 1;
+    animation: menuAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes menuAppear {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Add any additional phone menu styles here */

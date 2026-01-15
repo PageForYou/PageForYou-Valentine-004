@@ -11,28 +11,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const SCAN_TIME = 1000;
 
     const cursor = document.querySelector('.custom-cursor');
-    // Move custom cursor with mouse
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = `${e.clientX}px`;
-        cursor.style.top = `${e.clientY}px`;
-    });
-    // Change cursor on click
-    document.addEventListener('mousedown', () => {
-        document.body.classList.add('clicked');
-    });
-    document.addEventListener('mouseup', () => {
-        document.body.classList.remove('clicked');
-    });
-    // // Hide default cursor and show custom cursor when mouse enters the window
-    // document.addEventListener('mouseenter', () => {
-    //     cursor.style.opacity = '1';
-    // });
-    // // Optional: Hide custom cursor when mouse leaves the window
-    // document.addEventListener('mouseleave', () => {
-    //     cursor.style.opacity = '0';
-    // });
-    // // Make sure cursor is visible by default
-    // cursor.style.opacity = '1';
+    // Only initialize cursor for non-touch devices
+    if (window.matchMedia('(pointer: fine)').matches) {
+        // Move custom cursor with mouse
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        });
+        // Change cursor on click
+        document.addEventListener('mousedown', () => {
+            document.body.classList.add('clicked');
+        });
+        document.addEventListener('mouseup', () => {
+            document.body.classList.remove('clicked');
+        });
+        // // Hide default cursor and show custom cursor when mouse enters the window
+        // document.addEventListener('mouseenter', () => {
+        //     cursor.style.opacity = '1';
+        // });
+        // // Optional: Hide custom cursor when mouse leaves the window
+        // document.addEventListener('mouseleave', () => {
+        //     cursor.style.opacity = '0';
+        // });
+        // // Make sure cursor is visible by default
+        // cursor.style.opacity = '1';
+    } else {
+        // Hide cursor on touch devices
+        cursor.style.display = 'none';
+    }
     
     if (!id) {
         errorMessage.classList.remove('hidden');

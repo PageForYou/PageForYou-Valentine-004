@@ -55,17 +55,49 @@ input, button, textarea, select, a {
     cursor: inherit !important;
 }
 
+/* Prevent context menu on images and other elements */
+img, .unlock, .fingerprint-icon, .profile-pic {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Old versions of Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+    pointer-events: auto !important; /* Ensure pointer events work as expected */
+}
+
+/* Prevent long press menu on all elements */
+* {
+    -webkit-touch-callout: none; /* Prevent callout when holding tap on links (the native dialog that comes up) */
+    -webkit-user-select: none;   /* Disable selection/copy of elements */
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Re-enable selection for input and textarea */
+input, textarea, [contenteditable] {
+    -webkit-user-select: auto !important;
+    -khtml-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ffb6c1, #d8bfd8, #87cefa);
-    background-size: 200% 200%;
-    background-position: 100% 50%;
-    overflow-y: auto; /* Allow scrolling only if content is too tall */
+    /* background: linear-gradient(135deg, #ffb6c1, #d8bfd8, #87cefa); */
+    /* background-size: 200% 200%; */
+    /* background-position: 100% 50%; */
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
 }
 
 .container {

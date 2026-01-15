@@ -38,8 +38,15 @@ html, body {
     transition: cursor 0.1s ease;
     height: 100%;
     width: 100%;
+    min-height: 100vh;
     overflow: hidden; /* Prevent scrolling */
     position: fixed; /* This prevents the white space issue */
+    background: linear-gradient(135deg, #ffb6c1, #d8bfd8, #87cefa);
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 html:active, body:active {
     cursor: url('../assets/img/hand_cursor_click_32.png') 8 8, auto;
@@ -410,17 +417,3 @@ body {
     stroke: #4CAF50;
     filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
 }
-
-/* @media (hover: hover) and (pointer: fine) {
-    html, body {
-        cursor: url('../assets/img/hand_cursor_unclick_32.png') 8 8, auto;
-        transition: cursor 0.1s ease;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        position: fixed;
-    }
-    html:active, body:active {
-        cursor: url('../assets/img/hand_cursor_click_32.png') 8 8, auto;
-    }
-} */

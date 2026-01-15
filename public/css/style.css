@@ -36,11 +36,11 @@ body.clicked .custom-cursor {
 html, body {
     cursor: url('../assets/img/hand_cursor_unclick_32.png') 8 8, auto;
     transition: cursor 0.1s ease;
-    height: 100%;
     width: 100%;
-    min-height: 100vh;
-    overflow: hidden; /* Prevent scrolling */
-    position: fixed; /* This prevents the white space issue */
+    height: 100dvh;
+    min-height: 100dvh;
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, #ffb6c1, #d8bfd8, #87cefa);
     background-attachment: fixed;
     -webkit-background-size: cover;

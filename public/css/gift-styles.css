@@ -1,0 +1,120 @@
+/* Gift box styles */
+.message.giftbox {
+    align-self: center;
+    width: 100%;
+    max-width: 90%;
+    margin: 10px 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.gift-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10cqw;
+}
+
+.gifts-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.gift-item {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+.gift-item img {
+    max-width: 100px;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+.gift-close, .gift-open {
+    width: 25cqw;
+    height: 25cqw;
+    object-fit: contain;
+}
+
+.gift-content {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 85%;
+    max-width: 200px;
+    z-index: 10;
+    transition: transform 0.5s ease, opacity 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.gift-pop {
+    animation: popIn 0.5s forwards;
+}
+
+.gift-drop {
+    animation: dropDown 0.5s forwards;
+}
+
+.disabled-gift {
+    filter: grayscale(100%) brightness(0.8);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.gift-label {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+/* Animations */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-5deg); }
+    50% { transform: translateX(5px) rotate(5deg); }
+    75% { transform: translateX(-5px) rotate(-5deg); }
+}
+
+@keyframes popIn {
+    0% { transform: translateX(-50%) scale(0); opacity: 0; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+@keyframes dropDown {
+    0% { transform: translateX(-50%) scale(1); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(100px) scale(0.5); opacity: 0; }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .gift-close, .gift-open {
+        width: 25cqw;
+        height: 25cqw;
+    }
+    
+    .gift-content {
+        width: 95%;
+    }
+}

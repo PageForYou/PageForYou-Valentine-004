@@ -79,7 +79,33 @@ async function renderChatMessages(messages, customerId) {
                     ${msg.message}
                 </div>
             `;
+        } else if (msg.sender === 'giftbox') {
+            // Handle gift box message
+            const giftsHtml = msg.gifts.map((gift, index) => `
+                <div class="gift-item" data-index="${index}" data-opened="false">
+                    <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
+                    <img src="${gift.gift_open_image}" alt="Opened Gift" class="gift-open" style="display: none;">
+                    <img src="${gift.gift_image}" alt="Gift Content" class="gift-content" style="display: none;">
+                </div>
+            `).join('');
+            
+            const labelHtml = msg.showLabel ? 
+                `<div class="gift-label">${msg.label.replace('<quota>', msg.quota)}</div>` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="gift-container">
+                    <div class="gifts-wrapper">
+                        ${giftsHtml}
+                    </div>
+                    ${labelHtml}
+                </div>
+            `;
+            
+            // Store gift data for interaction
+            messageDiv.dataset.quota = msg.quota || 1;
+            messageDiv.dataset.openedCount = '0';
         } else {
+            // Default to sent message
             messageDiv.innerHTML = `
                 <div class="message-bubble">
                     ${msg.message}
@@ -94,12 +120,116 @@ async function renderChatMessages(messages, customerId) {
             setTimeout(() => {
                 messageDiv.classList.remove('hidden-message');
                 messageDiv.classList.add('animate-message');
+                
+                // Initialize gift box interactions after the message is shown
+                if (msg.sender === 'giftbox') {
+                    initializeGiftBox(messageDiv);
+                }
+                
                 resolve();
             }, 2000);
         });
         
         // Scroll to bottom after each message
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+// Initialize gift box interactions
+function initializeGiftBox(giftContainer) {
+    const giftItems = giftContainer.querySelectorAll('.gift-item');
+    const maxOpens = parseInt(giftContainer.dataset.quota, 10) || 1;
+    let openedCount = 0;
+    let isAnimating = false;
+    let currentOpenGift = null;
+    
+    giftItems.forEach((giftItem, index) => {
+        const giftClose = giftItem.querySelector('.gift-close');
+        const giftOpen = giftItem.querySelector('.gift-open');
+        const giftContent = giftItem.querySelector('.gift-content');
+        
+        giftItem.addEventListener('click', async () => {
+            // Prevent interaction during animation or if quota is reached
+            if (isAnimating || giftItem.dataset.opened === 'true' || openedCount >= maxOpens) {
+                return;
+            }
+            
+            isAnimating = true;
+            
+            // Close any currently open gift
+            if (currentOpenGift && currentOpenGift !== giftItem) {
+                await closeGift(currentOpenGift);
+            }
+            
+            // Open the clicked gift
+            await openGift(giftItem);
+            openedCount++;
+            giftContainer.dataset.openedCount = openedCount.toString();
+            currentOpenGift = giftItem;
+            
+            // If quota is reached, disable other gifts
+            if (openedCount >= maxOpens) {
+                giftItems.forEach(item => {
+                    if (item.dataset.opened !== 'true') {
+                        item.classList.add('disabled-gift');
+                    }
+                });
+                
+                // Auto-close after delay
+                setTimeout(() => {
+                    if (currentOpenGift) {
+                        closeGift(currentOpenGift).then(() => {
+                            currentOpenGift = null;
+                            isAnimating = false;
+                        });
+                    } else {
+                        isAnimating = false;
+                    }
+                }, 2000);
+            } else {
+                isAnimating = false;
+            }
+        });
+    });
+    
+    async function openGift(giftItem) {
+        const giftClose = giftItem.querySelector('.gift-close');
+        const giftOpen = giftItem.querySelector('.gift-open');
+        const giftContent = giftItem.querySelector('.gift-content');
+        
+        // Add shake animation
+        giftItem.classList.add('shake');
+        
+        // Wait for shake animation to complete
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        giftItem.classList.remove('shake');
+        
+        // Switch to open gift
+        giftClose.style.display = 'none';
+        giftOpen.style.display = 'block';
+        
+        // Show gift content with pop animation
+        await new Promise(resolve => setTimeout(resolve, 300));
+        giftContent.style.display = 'block';
+        giftContent.classList.add('gift-pop');
+        
+        // Mark as opened
+        giftItem.dataset.opened = 'true';
+    }
+    
+    async function closeGift(giftItem) {
+        const giftContent = giftItem.querySelector('.gift-content');
+        
+        // Add close animation
+        giftContent.classList.add('gift-drop');
+        giftContent.classList.add('disabled-gift');
+        
+        // Wait for drop animation to complete
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Reset states
+        giftContent.style.display = 'none';
+        giftContent.classList.remove('gift-pop', 'gift-drop');
     }
 }
 

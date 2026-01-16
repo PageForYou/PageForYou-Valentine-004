@@ -6,9 +6,42 @@
         { "title": "นิสัย: ", "text": "น่ารักคิขุ แต่ดุเล็กน้อย"}
     ],
     "chat": [
-        { "sender": "received", "message": "หวัดดีจั้ฟบรี๋ริ" },
-        { "sender": "received", "message": "วันนี้วันอะไรเอ่ยยย" },
-        { "sender": "received", "message": "วันเสาาาาร์ไงเย่ สุขสันต์วันเสาร์จ้า" },
-        { "sender": "received", "message": "ล้อเล่นจ้าฟ Happy Valentine Day น้า 🥰" }
+        { "sender": "received", "message": "ดีค้าบบี๋" },
+        { "sender": "received", "message": "Happy Valentine Day น้า 🥰" },
+        { "sender": "received", "message": "มีของขวัญมาให้ เลือกได้แค่อย่างเดียวนะ" },
+        { 
+            "sender": "giftbox", 
+            "gifts": [
+                {
+                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
+                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
+                    "gift_image": "../public/assets/img/RedRose.png"
+                },
+                {
+                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
+                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
+                    "gift_image": "../public/assets/img/RedRose.png"
+                },
+                {
+                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
+                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
+                    "gift_image": "../public/assets/img/RedRose.png"
+                },
+                {
+                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
+                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
+                    "gift_image": "../public/assets/img/RedRose.png"
+                },
+                {
+                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
+                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
+                    "gift_image": "../public/assets/img/RedRose.png"
+                }
+            ],
+            "showLabel": true,
+            "label": "กดเลือกของขวัญได้ <quota> กล่อง",
+            "quota": 1
+        },
+        { "sender": "received", "message": "ชอบของขวัญรึป่าวว" }
     ]
 }

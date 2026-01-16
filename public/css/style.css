@@ -274,8 +274,14 @@ body {
 }
 
 .unlock::before {
-    content: '🔓';
-    font-size: 8cqw;
+    content: '';
+    display: block;
+    width: 10cqw;
+    height: 10cqw;
+    background-image: url('../assets/img/lock_icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     opacity: 0.9;
 }
 .unlock:hover {

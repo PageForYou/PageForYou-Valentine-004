@@ -34,6 +34,12 @@ function resetScanAndShowMenu() {
         // Trigger reflow
         void phoneMenu.offsetWidth;
         phoneMenu.classList.add('visible');
+
+        setTimeout(() => {
+            if (window.loadChatMessages) {
+                loadChatMessages();
+            }
+        }, 1000);
     }, 100);
 }
 
@@ -46,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.getElementById('error-message');
     const phoneContainer = document.querySelector('.phone-container');
     const profilePic = document.getElementById('profile-pic');
+    const chatProfile = document.querySelector('.chat-profile-pic');
     
     const SCAN_TIME = 1000;
 
@@ -329,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set profile picture source
     const profilePicPath = isLocal ? `../../customers/${id}/img/01.jpg` : `../customers/${id}/img/01.jpg`;
     profilePic.src = profilePicPath;
+    chatProfile.src = profilePicPath;
     
     // Handle image loading errors
     profilePic.onerror = function() {

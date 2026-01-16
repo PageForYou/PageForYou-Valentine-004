@@ -41,7 +41,36 @@
                 </div>
             </div>
             <div class="phone-menu-overlay" id="phoneMenu">
-                <!-- Phone menu content will be added here -->
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="back-button" id="backButton">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                    </div>
+                    <div class="chat-profile">
+                        <img src="" alt="Profile" class="chat-profile-pic">
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Warit Chuayon</div>
+                        <div class="chat-status">กำลังใช้งาน</div>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-messages">
+                    <!-- Messages will be loaded dynamically -->
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input" contenteditable="false" placeholder="พิมพ์ข้อความ..."></div>
+                    <button class="send-button" disabled>
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
         <div id="error-message" class="error-message hidden">
@@ -50,5 +79,6 @@
         </div>
     </div>
     <script src="js/page-home.js"></script>
+    <script src="js/page-chat.js"></script>
 </body>
 </html>

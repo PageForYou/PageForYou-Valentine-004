@@ -4,6 +4,8 @@ async function loadChatMessages() {
         // Get the ID from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
+
+        showToast(id);
         
         if (!id) {
             console.error('No ID provided in URL');
@@ -35,6 +37,16 @@ async function loadChatMessages() {
     }
 }
 
+function showToast(message, duration = 800) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, duration);
+}
+
 // Function to update profile images
 function updateProfileImages(customerId) {
     const isLocal = location.hostname === 'localhost';
@@ -55,6 +67,7 @@ function updateProfileImages(customerId) {
 // Function to render chat messages
 // Function to render chat messages with animation
 async function renderChatMessages(messages, customerId) {
+    showToast('Loading chat messages...');
     const messagesContainer = document.querySelector('.chat-messages');
     if (!messagesContainer) return;
     
@@ -65,6 +78,7 @@ async function renderChatMessages(messages, customerId) {
     messagesContainer.innerHTML = '';
     
     // Add each message with animation
+    showToast(`Loading ${messages.length} messages...`);
     for (let i = 0; i < messages.length; i++) {
         const msg = messages[i];
         const messageDiv = document.createElement('div');

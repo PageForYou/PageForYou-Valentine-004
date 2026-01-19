@@ -3,10 +3,11 @@
     align-self: center;
     width: 100%;
     max-width: 90%;
-    margin: 10px 0;
-    padding: 10px 0;
+    padding: 0 !important;
     display: flex;
     justify-content: center;
+    min-height: 0;
+    height: auto;
 }
 
 .gift-container {
@@ -14,7 +15,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10cqw;
 }
 
 .gifts-wrapper {
@@ -35,7 +35,7 @@
 }
 
 .gift-item img {
-    max-width: 100px;
+    max-width: 80cqw;
     height: auto;
     transition: all 0.3s ease;
 }
@@ -47,16 +47,20 @@
 }
 
 .gift-content {
-    position: absolute;
-    top: -50%;
+    position: fixed;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) scale(0);
-    width: 85%;
-    max-width: 200px;
-    z-index: 10;
-    transition: transform 0.5s ease, opacity 0.3s ease;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translate(-50%, -50%) scale(0);
+    /* width: 80vw; */
+    /* height: 80vh; */
+    /* max-width: 100%; */
+    /* max-height: 100%; */
+    z-index: 1000;
+    object-fit: contain;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    will-change: transform, opacity;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .gift-pop {
@@ -68,7 +72,7 @@
 }
 
 .disabled-gift {
-    filter: grayscale(100%) brightness(0.8);
+    filter: grayscale(90%) brightness(0.9);
     opacity: 0.7;
     cursor: not-allowed;
 }
@@ -93,14 +97,37 @@
 }
 
 @keyframes popIn {
-    0% { transform: translateX(-50%) scale(0); opacity: 0; }
-    50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
-    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    0% { 
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
 }
-
+@keyframes popOut {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% { 
+        transform: var(--final-position);
+        opacity: 0;
+        width: var(--final-width);
+        height: var(--final-height);
+    }
+}
 @keyframes dropDown {
     0% { transform: translateX(-50%) scale(1); opacity: 1; }
     100% { transform: translateX(-50%) translateY(100px) scale(0.5); opacity: 0; }
+}
+.gift-pop-out {
+    animation: popOut 0.5s forwards !important;
+}
+/* Disable pointer events on the gift container when animating */
+.gift-container.animating * {
+    pointer-events: none;
 }
 
 .shake {
@@ -115,6 +142,6 @@
     }
     
     .gift-content {
-        width: 95%;
+        /* width: 95%; */
     }
 }

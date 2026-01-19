@@ -28,8 +28,10 @@ async function loadChatMessages() {
         // Update profile images
         // const avatarPath = updateProfileImages(id);
         
+        showToast('check 2');
         // Render messages if they exist
         if (data.chat && Array.isArray(data.chat)) {
+            showToast('pass 2');
             renderChatMessages(data.chat, id);
         }
     } catch (error) {

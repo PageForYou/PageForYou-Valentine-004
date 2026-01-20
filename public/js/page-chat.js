@@ -1,4 +1,5 @@
 let isWaiting = false;
+let isReachLimitCurrent = false;
 
 async function loadChatMessages() {
     try {
@@ -97,7 +98,6 @@ function initializeGiftBox(giftContainer) {
     const maxOpens = parseInt(giftContainer.dataset.quota, 10) || 1;
     let openedCount = 0;
     let isAnimating = false;
-    let currentOpenGift = null;
     
     giftItems.forEach((giftItem, index) => {
         giftItem.addEventListener('click', async () => {
@@ -110,15 +110,9 @@ function initializeGiftBox(giftContainer) {
             
             isAnimating = true;
             
-            // Close any currently open gift
-            if (currentOpenGift && currentOpenGift !== giftItem) {
-                await closeGift(currentOpenGift);
-            }
-            
             await openGift(giftItem);
             openedCount++;
             giftContainer.dataset.openedCount = openedCount.toString();
-            currentOpenGift = giftItem;
             setTimeout(() => {isAnimating = false;}, 1000);
             
             if (openedCount >= maxOpens) {
@@ -127,6 +121,7 @@ function initializeGiftBox(giftContainer) {
                         item.classList.add('disabled-gift');
                     }
                 });
+                isReachLimitCurrent = true;
             }
         });
     });
@@ -135,6 +130,8 @@ function initializeGiftBox(giftContainer) {
         const giftClose = giftItem.querySelector('.gift-close');
         const giftOpen = giftItem.querySelector('.gift-open');
         const giftContent = giftItem.querySelector('.gift-content');
+        const giftContentOutside = document.querySelector('.gift-content-outside');
+        const giftContentOutsideBg = document.querySelector('.gift-content-outside-background');
         
         giftItem.classList.add('shake');
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -144,22 +141,45 @@ function initializeGiftBox(giftContainer) {
         giftClose.style.display = 'none';
         giftOpen.style.display = 'block';
         
-        // Show gift content with pop animation
+        // Show gift content in the outside container
         await new Promise(resolve => setTimeout(resolve, 300));
-        giftContent.style.display = 'block';
-        giftContent.classList.add('gift-pop');
         giftItem.dataset.opened = 'true';
+        
+        // Clone the gift content to the outside container
+        giftContentOutside.innerHTML = '';
+        const clonedContent = giftContent.cloneNode(true);
+        clonedContent.style.display = 'block';
+        giftContentOutside.appendChild(clonedContent);
+        
+        giftContentOutsideBg.style.visibility = "visible";
+        giftContentOutsideBg.classList.add('active');
+        // Show the outside container with animation
+        setTimeout(() => {
+            giftContentOutside.classList.add('active');
+        }, 300);
     }
+}
+
     
-    async function closeGift(giftItem, isReachLimit) {
-        const giftContent = giftItem.querySelector('.gift-content');
-        giftContent.classList.add('gift-drop');
-        await new Promise(resolve => setTimeout(resolve, 500));
-        giftContent.style.display = 'none';
-        giftContent.classList.remove('gift-pop', 'gift-drop');
-        if (isReachLimit) isWaiting = false;
+async function closeGift() {
+    const giftContentOutside = document.querySelector('.gift-content-outside');
+    const giftContentOutsideBg = document.querySelector('.gift-content-outside-background');
+    
+    // Hide the outside container with animation
+    giftContentOutside.classList.remove('active');
+    await new Promise(resolve => setTimeout(resolve, 300));
+    giftContentOutsideBg.classList.remove('active');
+    await new Promise(resolve => setTimeout(resolve, 300));
+    giftContentOutsideBg.style.visibility = "hidden";
+    giftContentOutside.innerHTML = '';
+    
+    if (isReachLimitCurrent) {
+        isWaiting = false;
+        isReachLimitCurrent = false; // reset for next gift box message type
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const giftContentOutsideBg = document.querySelector('.gift-content-outside-background');
+    giftContentOutsideBg.addEventListener('click', () => { closeGift(); });
 });

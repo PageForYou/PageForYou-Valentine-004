@@ -5,33 +5,39 @@ async function loadChatMessages() {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
+        showToast('A0');
         showToast(id);
         
         if (!id) {
+            showToast("A1");
             console.error('No ID provided in URL');
             return;
         }
 
+        showToast("A2");
         // Determine the correct path based on environment
         const basePath = window.location.hostname === 'localhost' ? 
             `../customers/${id}/data.json` : 
             `./customers/${id}/data.json`;
         
+        showToast("A3");
         // Fetch the data
         const response = await fetch(basePath);
         if (!response.ok) {
+            showToast("A4");
             throw new Error('Failed to load chat data');
         }
         
+        showToast("A5");
         const data = await response.json();
         
         // Update profile images
         // const avatarPath = updateProfileImages(id);
         
-        showToast('check 2');
+        showToast("A6");
         // Render messages if they exist
         if (data.chat && Array.isArray(data.chat)) {
-            showToast('pass 2');
+            showToast('A7');
             renderChatMessages(data.chat, id);
         }
     } catch (error) {
@@ -65,7 +71,7 @@ function updateProfileImages(customerId) {
 // Function to render chat messages
 // Function to render chat messages with animation
 async function renderChatMessages(messages, customerId) {
-    showToast('Loading chat messages...');
+    showToast('A8');
     const messagesContainer = document.querySelector('.chat-messages');
     if (!messagesContainer) return;
     

@@ -78,14 +78,14 @@
 }
 
 .gift-label {
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: 3cqw;
     color: #666;
     text-align: center;
-    padding: 5px 10px;
+    padding: 2cqw;
     background: rgba(255, 255, 255, 0.7);
-    border-radius: 15px;
-    font-size: 12px;
+    border-radius: 999cqw;
+    font-size: 3cqw;
+    margin-bottom: 2cqw;
 }
 
 /* Animations */
@@ -106,9 +106,13 @@
         opacity: 1;
     }
 }
-@keyframes popOut {
-    0% { 
+/* @keyframes popOut {
+    0%, 10% { 
         transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(0.8);
         opacity: 1;
     }
     100% { 
@@ -117,14 +121,14 @@
         width: var(--final-width);
         height: var(--final-height);
     }
-}
+} */
 @keyframes dropDown {
-    0% { transform: translateX(-50%) scale(1); opacity: 1; }
-    100% { transform: translateX(-50%) translateY(100px) scale(0.5); opacity: 0; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
 }
-.gift-pop-out {
+/* .gift-pop-out {
     animation: popOut 0.5s forwards !important;
-}
+} */
 /* Disable pointer events on the gift container when animating */
 .gift-container.animating * {
     pointer-events: none;
@@ -132,16 +136,4 @@
 
 .shake {
     animation: shake 0.5s ease-in-out;
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .gift-close, .gift-open {
-        width: 25cqw;
-        height: 25cqw;
-    }
-    
-    .gift-content {
-        /* width: 95%; */
-    }
 }

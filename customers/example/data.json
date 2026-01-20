@@ -30,12 +30,7 @@
                 {
                     "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
                     "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/RedRose.png"
-                },
-                {
-                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
-                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/RedRose.png"
+                    "gift_image": "../public/assets/img/bear_doll_purple.png"
                 }
             ],
             "showLabel": true,

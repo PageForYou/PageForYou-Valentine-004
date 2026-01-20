@@ -34,22 +34,14 @@ function resetScanAndShowMenu() {
         // Trigger reflow
         void phoneMenu.offsetWidth;
         phoneMenu.classList.add('visible');
-        showToast('CHECK');
 
         setTimeout(() => {
 
             if (window.loadChatMessages) {
-                showToast('PASS');
                 loadChatMessages();
             }
-        }, 1000);
+        }, 500);
     }, 100);
-}
-
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    console.log(toast.textContent);
-    toast.textContent = toast.textContent + "|" + message;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -63,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const profilePic = document.getElementById('profile-pic');
     const chatProfile = document.querySelector('.chat-profile-pic');
     
-    const SCAN_TIME = 1000;
+    const SCAN_TIME = 500;
 
     const cursor = document.querySelector('.custom-cursor');
     // Only initialize cursor for non-touch devices
@@ -243,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Reset scan and show phone menu after a short delay
                         setTimeout(resetScanAndShowMenu, 500);
                     }
-                }, 3000);
+                }, 555);
             }, 300);
             
             // Allow overlay closure after scan is complete

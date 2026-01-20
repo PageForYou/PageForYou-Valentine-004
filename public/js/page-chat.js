@@ -17,8 +17,8 @@ async function loadChatMessages() {
         showToast("A2");
         // Determine the correct path based on environment
         const basePath = window.location.hostname === 'localhost' ? 
-            `../customers/${id}/data.json` : 
-            `../../customers/${id}/data.json`;
+            `../../customers/${id}/data.json` : 
+            `../customers/${id}/data.json`;
         
         showToast("A3");
         // Fetch the data

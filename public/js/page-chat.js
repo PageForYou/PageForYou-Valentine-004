@@ -39,14 +39,10 @@ async function loadChatMessages() {
     }
 }
 
-function showToast(message, duration = 800) {
+function showToast(message) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, duration);
+    console.log(toast.textContent);
+    toast.textContent = toast.textContent + "\n" + message;
 }
 
 // Function to update profile images
@@ -160,10 +156,6 @@ function initializeGiftBox(giftContainer) {
     let currentOpenGift = null;
     
     giftItems.forEach((giftItem, index) => {
-        const giftClose = giftItem.querySelector('.gift-close');
-        const giftOpen = giftItem.querySelector('.gift-open');
-        const giftContent = giftItem.querySelector('.gift-content');
-        
         giftItem.addEventListener('click', async () => {
             // Prevent interaction during animation or if quota is reached
             if (isAnimating || giftItem.dataset.opened === 'true' || openedCount >= maxOpens) {

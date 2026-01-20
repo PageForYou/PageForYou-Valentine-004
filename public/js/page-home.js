@@ -46,14 +46,10 @@ function resetScanAndShowMenu() {
     }, 100);
 }
 
-function showToast(message, duration = 800) {
+function showToast(message) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, duration);
+    console.log(toast.textContent);
+    toast.textContent = toast.textContent + "|" + message;
 }
 
 document.addEventListener('DOMContentLoaded', function() {

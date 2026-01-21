@@ -6,37 +6,50 @@
         { "title": "นิสัย: ", "text": "น่ารักคิขุ แต่ดุเล็กน้อย"}
     ],
     "chat": [
-        { "sender": "received", "message": "ดีค้าบบี๋" },
-        { "sender": "received", "message": "Happy Valentine Day น้า 🥰" },
-        { "sender": "received", "message": "มีของขวัญมาให้ เลือกได้แค่ 2 กล่องน้า" },
+        { "sender": "received", "message": "บี๋ค้าบบบ 🥰" },
+        { "sender": "received", "message": "เบ้บมีอะไรมาให้" },
+        { "sender": "received", "message": "ลองจิ้มที่กล่องของขวัญดูสิ 🎁👀" },
         { 
             "sender": "giftbox", 
             "gifts": [
                 {
-                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
-                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/RedRose.png"
-                },
-                {
-                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
-                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/RedRose.png"
-                },
-                {
-                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
-                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/RedRose.png"
-                },
-                {
-                    "gift_close_image": "../public/assets/img/gift_pink_1_close.png", 
-                    "gift_open_image": "../public/assets/img/gift_pink_1_open.png", 
-                    "gift_image": "../public/assets/img/bear_doll_purple.png"
+                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
+                    "gift_image": "../public/assets/img/valentine_giftset_4.png"
                 }
             ],
-            "showLabel": true,
+            "showLabel": false,
             "label": "กดเลือกของขวัญได้ <quota> กล่อง",
-            "quota": 2
+            "quota": 1
         },
-        { "sender": "received", "message": "ชอบของขวัญรึป่าวว" }
+        { "sender": "received", "message": "ทาดาา สุขสันต์วันวาเลนไทน์นะคับ" },
+        { "sender": "received", "message": "ขอบคุณที่อยู่ด้วยกันมานะ ได้ไปเที่ยวที่ใหม่ๆ ทำอะไรใหม่ๆด้วยกันเยอะเลย" },
+        { "sender": "received", "message": "มีรูปรวมมาให้ดูด้วย5555 กดดูได้เบยย" },
+        { 
+            "sender": "gallery", 
+            "galleryImage": "../public/assets/img/gallery.png",
+            "gallery_items": [
+                {
+                    "imageName": "03",
+                    "title": "Chocolate village",
+                    "description": "ไป chocolate village กันมา ได้รูปเยอะเลย สถานที่สวยมากๆ อยากไปอีกก",
+                    "align": "left"
+                },
+                {
+                    "imageName": "04",
+                    "title": "ปีใหม่ บางแสน",
+                    "description": "คนเยอะมาก แต่พุก็เยอะเหมือนกัน ปีนี้ก็ไปเคาท์ดาวน์กันอีกนะ",
+                    "align": "right"
+                },
+                {
+                    "imageName": "05",
+                    "title": "Churn",
+                    "description": "ครัวซองอร่อยมากก แล้วก็ได้รูปสวยๆมาด้วย ไว้จะพาไปหลายๆคาเฟ่เลย",
+                    "align": "left"
+                }
+            ]
+        },
+        { "sender": "received", "message": "มีของขวัญมาให้บี๋ด้วยนะ" },
+        { "sender": "received", "message": "แต่ต้องตอบคำถามให้ถูกทุกข้อก่อน 😎" }
     ]
 }

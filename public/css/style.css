@@ -514,3 +514,11 @@ body {
     stroke: #4CAF50;
     filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.9));
 }
+
+.scrollable-element::-webkit-scrollbar {
+    display: none;
+}
+.scrollable-element {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

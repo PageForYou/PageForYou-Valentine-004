@@ -1,11 +1,12 @@
 let isWaiting = false;
 let isReachLimitCurrent = false;
+const isLocal = location.hostname === 'localhost';
+const urlParams = new URLSearchParams(window.location.search);
+const customerId = urlParams.get('id');
 
 async function loadChatMessages() {
     try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        const basePath = window.location.hostname === 'localhost' ? `../../customers/${id}/data.json` : `../customers/${id}/data.json`;
+        const basePath = window.location.hostname === 'localhost' ? `../../customers/${customerId}/data.json` : `../customers/${customerId}/data.json`;
         
         const response = await fetch(basePath);
         if (!response.ok) {
@@ -13,20 +14,20 @@ async function loadChatMessages() {
         }
         const data = await response.json();
         if (data.chat && Array.isArray(data.chat)) {
-            renderChatMessages(data.chat, id);
+            renderChatMessages(data.chat);
         }
     } catch (error) {
         console.error('Error loading chat:', error);
     }
 }
 
-async function renderChatMessages(messages, customerId) {
+async function renderChatMessages(messages) {
     const messagesContainer = document.querySelector('.chat-messages');
-    const isLocal = location.hostname === 'localhost';
     const imagePath = isLocal ? `../customers/${customerId}/img/01.jpg` : `../customers/${customerId}/img/01.jpg`;
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
+        // if (i<6) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;
@@ -40,13 +41,24 @@ async function renderChatMessages(messages, customerId) {
                     ${msg.message}
                 </div>
             `;
+        } else if (msg.sender === 'gallery') {
+            isWaiting = true;
+            messageDiv.innerHTML = `
+                <div class="gallery-container">
+                    <img src="${msg.galleryImage}" alt="Gallery" class="gallery-thumbnail">
+                </div>
+            `;
+            messageDiv.dataset.galleryItems = JSON.stringify(msg.gallery_items);
         } else if (msg.sender === 'giftbox') {
+            messageDiv.dataset.giftAmount = msg.gifts.length;
             isWaiting = true;
             const giftsHtml = msg.gifts.map((gift, index) => `
                 <div class="gift-item" data-index="${index}" data-opened="false">
                     <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
                     <img src="${gift.gift_open_image}" alt="Opened Gift" class="gift-open" style="display: none;">
-                    <img src="${gift.gift_image}" alt="Gift Content" class="gift-content" style="display: none;">
+                    <div class="gift-content-wrapper">
+                        <img src="${gift.gift_image}" alt="Gift Content" class="gift-content" style="display: none;">
+                    </div>
                 </div>
             `).join('');
             
@@ -80,6 +92,8 @@ async function renderChatMessages(messages, customerId) {
             messageDiv.classList.add('animate-message');
             if (msg.sender === 'giftbox') {
                 initializeGiftBox(messageDiv);
+            } else if (msg.sender === 'gallery') {
+                initializeGallery(messageDiv);
             }
             await sleep(500);
             while (isWaiting === true) {
@@ -95,6 +109,11 @@ async function renderChatMessages(messages, customerId) {
 // Initialize gift box interactions
 function initializeGiftBox(giftContainer) {
     const giftItems = giftContainer.querySelectorAll('.gift-item');
+    if (giftContainer.dataset.giftAmount === "1") {
+        giftItems[0].classList.add('single-gift');
+    } else {
+        giftItems[0].classList.remove('single-gift');
+    }
     const maxOpens = parseInt(giftContainer.dataset.quota, 10) || 1;
     let openedCount = 0;
     let isAnimating = false;
@@ -160,6 +179,131 @@ function initializeGiftBox(giftContainer) {
     }
 }
 
+function initializeGallery(galleryContainer) {
+    const thumbnail = galleryContainer.querySelector('.gallery-thumbnail');
+    const overlay = document.querySelector('.gallery-overlay');
+    const closeBtn = overlay.querySelector('.close-gallery');
+    const itemsContainer = overlay.querySelector('.gallery-items-container');
+    const galleryItems = JSON.parse(galleryContainer.dataset.galleryItems);
+    let isFirstOpen = true;
+
+    // Thumbnail click handler
+    thumbnail.addEventListener('click', async () => {
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        if (isFirstOpen) {
+            await showGalleryItems(itemsContainer, galleryItems);
+            isFirstOpen = false;
+        } else {
+            // Show all items immediately on subsequent opens
+            itemsContainer.innerHTML = '';
+            galleryItems.forEach((item, index) => {
+                const itemElement = createGalleryItem(item, index);
+                itemsContainer.appendChild(itemElement);
+                // Make them all visible immediately
+                setTimeout(() => {
+                    itemElement.style.opacity = '1';
+                    itemElement.style.transform = 'translateY(0)';
+                }, 50);
+            });
+        }
+        closeBtn.style.display = 'block';
+    });
+
+    // Close button handler
+    closeBtn.addEventListener('click', () => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            overlay.style.opacity = '1';
+            isWaiting = false; // Allow next message to load
+        }, 300);
+    });
+
+    // Close when clicking outside content
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeBtn.click();
+        }
+    });
+}
+
+async function showGalleryItems(container, items) {
+    container.innerHTML = '';
+    
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemElement = createGalleryItem(item, i);
+        container.appendChild(itemElement);
+        
+        // Animate each item with a delay
+        await new Promise(resolve => {
+            setTimeout(() => {
+                itemElement.style.opacity = '1';
+                itemElement.style.transform = 'translateY(0)';
+                resolve();
+            }, i * 1000); // 1 second delay between items
+        });
+    }
+}
+
+function createGalleryItem(item, index) {
+    const itemElement = document.createElement('div');
+    itemElement.className = 'gallery-item';
+    itemElement.style.opacity = '0';
+    itemElement.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+    itemElement.style.transform = 'translateY(20px)';
+    itemElement.style.marginBottom = '30px';
+    itemElement.style.width = '100%';
+    itemElement.style.maxWidth = '800px';
+    const basePath = isLocal ? `../customers/${customerId}/img/` : `../customers/${customerId}/img/`;
+    
+    // Different layouts based on alignment
+    if (item.align === 'left' || item.align === 'right') {
+        itemElement.style.display = 'flex';
+        itemElement.style.flexDirection = item.align === 'left' ? 'row' : 'row-reverse';
+        itemElement.style.alignItems = 'flex-start';
+        itemElement.style.gap = '20px';
+        
+        itemElement.innerHTML = `
+            <div style="flex: 0 0 50%;">
+                <img src="${basePath}${item.imageName}.jpg" 
+                     alt="${item.title}" 
+                     style="width: 100%; 
+                            border-radius: 12px; 
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                            aspect-ratio: 4/3;
+                            object-fit: cover;">
+            </div>
+            <div style="flex: 1; padding: 15px 0;">
+                <h3 style="margin: 0 0 10px 0; color: #e91e63; font-size: 1.4em;">${item.title}</h3>
+                <p style="margin: 0; color: #555; line-height: 1.5;">${item.description}</p>
+            </div>
+        `;
+    } else {
+        // Center alignment
+        itemElement.style.textAlign = 'center';
+        itemElement.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <img src="${basePath}${item.imageName}.jpg" 
+                     alt="${item.title}" 
+                     style="width: 100%; 
+                            max-width: 600px; 
+                            border-radius: 12px; 
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                            aspect-ratio: 16/9;
+                            object-fit: cover;
+                            margin: 0 auto 15px;">
+            </div>
+            <h3 style="margin: 0 0 10px 0; color: #e91e63; font-size: 1.4em;">${item.title}</h3>
+            <p style="margin: 0 auto; color: #555; line-height: 1.5; max-width: 600px;">${item.description}</p>
+        `;
+    }
+    
+    return itemElement;
+}
     
 async function closeGift() {
     const giftContentOutside = document.querySelector('.gift-content-outside');
@@ -177,6 +321,20 @@ async function closeGift() {
         isWaiting = false;
         isReachLimitCurrent = false; // reset for next gift box message type
     }
+
+    const giftContainer = document.querySelector('.gift-container');
+    const giftItems = giftContainer.querySelectorAll('.gift-item');
+    giftItems.forEach(async item => {
+        const giftOpen = item.querySelector('.gift-open');
+        const giftContent = item.querySelector('.gift-content');
+        if (item.dataset.opened === 'true' && giftOpen.style.display === 'block') {
+            giftOpen.classList.add('hide');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            giftOpen.style.display = 'none';
+            giftContent.style.display = 'block';
+            giftContent.classList.add('pop');
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

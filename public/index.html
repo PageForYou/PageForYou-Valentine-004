@@ -25,7 +25,7 @@
 </head>
 <body>
     <div style="position: fixed; top: 10px; right: 10px; color: #ff4f9a; font-size: 0.8rem; z-index: 888; background: rgba(255, 255, 255, 0.8); padding: 4px 12px; border-radius: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.5); text-shadow: 0 1px 1px rgba(0,0,0,0.1);">
-        v1.0.11 (fix: Thai character & messages wip)
+        v1.0.12 (update gallery)
     </div>
     <div class="custom-cursor"></div>
     <div class="gift-content-outside-background">
@@ -75,7 +75,7 @@
                 </div>
                 
                 <!-- Chat Messages -->
-                <div class="chat-messages">
+                <div class="chat-messages scrollable-element">
                     <!-- Messages will be loaded dynamically -->
                 </div>
                 
@@ -88,6 +88,16 @@
                         </svg>
                     </button>
                 </div>
+            </div>
+            
+            <div class="gallery-overlay scrollable-element">
+                <div class="gallery-items-container"></div>
+                <button class="close-gallery" style="display: none;">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
         </div>
         <div id="error-message" class="error-message hidden">

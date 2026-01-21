@@ -33,19 +33,22 @@
                     "imageName": "03",
                     "title": "Chocolate village",
                     "description": "ไป chocolate village กันมา ได้รูปเยอะเลย สถานที่สวยมากๆ อยากไปอีกก",
-                    "align": "left"
+                    "align": "left",
+                    "aspectRatio": "9/12"
                 },
                 {
                     "imageName": "04",
                     "title": "ปีใหม่ บางแสน",
                     "description": "คนเยอะมาก แต่พุก็เยอะเหมือนกัน ปีนี้ก็ไปเคาท์ดาวน์กันอีกนะ",
-                    "align": "right"
+                    "align": "right",
+                    "aspectRatio": "9/12"
                 },
                 {
                     "imageName": "05",
                     "title": "Churn",
                     "description": "ครัวซองอร่อยมากก แล้วก็ได้รูปสวยๆมาด้วย ไว้จะพาไปหลายๆคาเฟ่เลย",
-                    "align": "left"
+                    "align": "left",
+                    "aspectRatio": "9/12"
                 }
             ]
         },

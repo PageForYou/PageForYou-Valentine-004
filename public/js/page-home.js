@@ -49,6 +49,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     const isLocal = location.hostname === 'localhost';
+ 
+    // Preload customer images
+    function preloadCustomerImages(customerId) {
+        const preloadedImages = [];
+        for (let i = 1; i <= 20; i++) {
+            const imageNumber = i.toString().padStart(2, '0');
+            const img = new Image();
+            img.onerror = function() {
+                const index = preloadedImages.indexOf(img);
+                if (index > -1) {
+                    preloadedImages.splice(index, 1);
+                }
+            };
+            img.src = `/customers/${customerId}/img/${imageNumber}.jpg`;
+            preloadedImages.push(img);
+        }
+        return preloadedImages;
+    }
+ 
+    // Start preloading images
+    const preloadedImages = preloadCustomerImages(id);
     
     const errorMessage = document.getElementById('error-message');
     const phoneContainer = document.querySelector('.phone-container');

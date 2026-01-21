@@ -265,7 +265,6 @@ function createGalleryItem(item, index) {
         itemElement.style.display = 'flex';
         itemElement.style.flexDirection = item.align === 'left' ? 'row' : 'row-reverse';
         itemElement.style.alignItems = 'flex-start';
-        itemElement.style.gap = '20px';
         
         itemElement.innerHTML = `
             <div style="flex: 0 0 50%;">
@@ -273,11 +272,11 @@ function createGalleryItem(item, index) {
                      alt="${item.title}" 
                      style="width: 100%; 
                             border-radius: 12px; 
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                            aspect-ratio: 4/3;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+                            aspect-ratio: ${item.aspectRatio};
                             object-fit: cover;">
             </div>
-            <div style="flex: 1; padding: 15px 0;">
+            <div style="flex: 1;">
                 <h3 style="margin: 0 0 10px 0; color: #e91e63; font-size: 1.4em;">${item.title}</h3>
                 <p style="margin: 0; color: #555; line-height: 1.5;">${item.description}</p>
             </div>

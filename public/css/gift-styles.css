@@ -255,11 +255,11 @@
 
 .close-gallery {
     position: fixed;
-    bottom: 5%;
+    bottom: 3%;
     left: 50%;
     transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
+    width: 12cqw;
+    height: 12cqw;
     border-radius: 50%;
     background: rgba(255, 105, 180, 1);
     border: none;
@@ -268,6 +268,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }

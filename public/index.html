@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/phone-menu-style.css">
     <link rel="stylesheet" href="css/gift-styles.css">
+    <link rel="stylesheet" href="css/quiz-styles.css">
     <link rel="preload" as="image" href="assets/img/bg_test_1.jpg">
     <link rel="preload" as="image" href="assets/img/bg_test_2.jpg">
     <link rel="preload" as="image" href="assets/img/fingerprint.png">
@@ -118,6 +119,30 @@
                     </svg>
                 </button>
             </div>
+            
+            <!-- Quiz Container -->
+            <div class="quiz-container" id="quizContainer">
+                <!-- <div class="quiz-header">
+                    <img src="" alt="Quiz" id="quizHeaderImage">
+                </div> -->
+                <div class="quiz-content">
+                    <div class="quiz-question" id="quizQuestion"></div>
+                    <img src="" alt="Question Image" class="quiz-question-image" id="quizQuestionImage" style="display: none;">
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar" id="quizProgressBar"></div>
+                    </div>
+                </div>
+                <div class="quiz-result" id="quizResult">
+                    <img src="" alt="Quiz Complete" id="quizResultImage">
+                    <div class="quiz-score" id="quizScore"></div>
+                    <div class="quiz-message" id="quizMessage"></div>
+                    <div class="quiz-actions" id="quizActions">
+                        <button class="quiz-button primary" id="quizCloseButton">ปิด</button>
+                        <button class="quiz-button secondary" id="quizRestartButton" style="display: none;">ลองใหม่</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="error-message" class="error-message hidden">
             <h2>Error</h2>
@@ -126,6 +151,7 @@
     </div>
     <script src="js/page-home.js"></script>
     <script src="js/loading-screen.js"></script>
+    <script src="js/quiz.js"></script>
     <script src="js/page-chat.js"></script>
 </body>
 </html>

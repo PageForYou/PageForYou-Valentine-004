@@ -27,7 +27,7 @@ async function renderChatMessages(messages) {
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
-        // if (i<6) continue;
+        // if (i<9) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;
@@ -49,6 +49,27 @@ async function renderChatMessages(messages) {
                 </div>
             `;
             messageDiv.dataset.galleryItems = JSON.stringify(msg.gallery_items);
+        } else if (msg.sender === 'quiz') {
+            isWaiting = true;
+            messageDiv.innerHTML = `
+                <div class="quiz-thumbnail">
+                    <img src="${msg.quizImage}" alt="Quiz" class="quiz-thumbnail-image">
+                </div>
+            `;
+            
+            // Add click handler for the quiz image
+            const quizImage = messageDiv.querySelector('.quiz-thumbnail-image');
+            quizImage.style.cursor = 'pointer';
+            quizImage.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Make sure we're passing a clean copy of the quiz data
+                const quizData = JSON.parse(JSON.stringify(msg));
+                if (window.startQuiz) {
+                    window.startQuiz(quizData);
+                } else {
+                    console.error('startQuiz function not found');
+                }
+            });
         } else if (msg.sender === 'giftbox') {
             messageDiv.dataset.giftAmount = msg.gifts.length;
             isWaiting = true;

@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff6b8b, #ff8e9e, #ffb3c6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.4s ease-out, transform 0.8s ease-out;
+}
+
+.loading-screen.fade-out {
+    opacity: 0 !important;
+    transform: scale(1.5);
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    transform: translateY(-20px);
+}
+
+.heart-progress-container {
+    position: relative;
+    width: 60cqw;
+    height: 54cqw;
+    margin: 0 auto 20px;
+}
+
+.heart-progress-bg, .heart-progress-fill {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.heart-svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 2;
+}
+
+/* .heart-path {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: draw 1.5s ease-out forwards;
+} */
+
+.heart-progress-fill {
+    clip-path: polygon(5% 0, 5% 0, 5% 100%, 5% 100%);
+    transition: clip-path 0.1s linear;
+}
+
+.heart-progress-fill .heart-svg {
+    stroke: #fff;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+.loading-percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.loading-text {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
+}
+
+/* @keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+} */
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}

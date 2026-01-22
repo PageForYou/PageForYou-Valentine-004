@@ -70,6 +70,21 @@ document.addEventListener('DOMContentLoaded', function() {
  
     // Start preloading images
     const preloadedImages = preloadCustomerImages(id);
+
+    fetch(`/customers/${id}/data.json`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.phoneBackground) {
+                const phoneContainer = document.querySelector('.phone-container');
+                if (phoneContainer) {
+                    phoneContainer.style.backgroundImage = `url('/customers/${id}/img/${data.phoneBackground}')`;
+                    phoneContainer.style.backgroundSize = 'cover';
+                    phoneContainer.style.backgroundPosition = 'center';
+                    phoneContainer.style.backgroundRepeat = 'no-repeat';
+                }
+            }
+        })
+        .catch(error => console.error('Error loading customer data:', error));
     
     const errorMessage = document.getElementById('error-message');
     const phoneContainer = document.querySelector('.phone-container');
@@ -316,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const overlay = document.querySelector('.unlock-overlay');
         if (overlay.dataset.scanInProgress === 'true') return;
         const fingerprintScan = document.querySelector('.fingerprint-scan');
-        const notification = document.querySelector('.notification');
         const identification = document.querySelector('.identification');
         
         // Don't close if click is on notification, identification, or during scan
@@ -397,11 +411,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateDateTime();
         setInterval(updateDateTime, 6000);
         
-        // Add animation class after a short delay to make it look like a real notification
-        setTimeout(() => {
-            const notification = document.querySelector('.notification');
-            notification.style.animation = 'slideIn 0.5s ease-out forwards';
-        }, 500);
+        // // Add animation class after a short delay to make it look like a real notification
+        // setTimeout(() => {
+        //     const notification = document.querySelector('.notification');
+        //     notification.style.animation = 'slideIn 0.5s ease-out forwards';
+        // }, 500);
     } else {
         mainContent.style.display = 'none';
     }

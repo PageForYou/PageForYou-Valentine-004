@@ -85,6 +85,7 @@ async function renderChatMessages(messages) {
         }
         
         messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         await (async () => {
@@ -100,9 +101,6 @@ async function renderChatMessages(messages) {
                 await sleep(1000);
             }
         })();
-        
-        // Scroll to bottom after each message
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 }
 
@@ -232,21 +230,67 @@ function initializeGallery(galleryContainer) {
 
 async function showGalleryItems(container, items) {
     container.innerHTML = '';
+    container.style.overflow = 'hidden'; // Prevent user scrolling
     
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
         const itemElement = createGalleryItem(item, i);
         container.appendChild(itemElement);
         
-        // Animate each item with a delay
-        await new Promise(resolve => {
-            setTimeout(() => {
-                itemElement.style.opacity = '1';
-                itemElement.style.transform = 'translateY(0)';
-                resolve();
-            }, i * 1000); // 1 second delay between items
-        });
+        // Show the current item
+        itemElement.style.opacity = '1';
+        itemElement.style.transform = 'translateY(0)';
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        // Custom smooth scroll to the new item
+        await smoothScrollTo(container, itemElement.offsetTop - (container.offsetHeight / 2) + (itemElement.offsetHeight / 2));
+
+        // Wait before showing next item
+        if (i < items.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
+    
+    // Re-enable scrolling after all items are shown
+    container.style.overflow = 'auto';
+}
+
+// Custom smooth scroll function
+function smoothScrollTo(element, to, duration = 800) {
+    const start = element.scrollTop;
+    const change = to - start;
+    const startTime = performance.now();
+    
+    function animateScroll(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeInOutCubic = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : (progress - 1) * (2 * progress - 2) * (2 * progress - 2) + 1;
+        
+        element.scrollTop = start + change * easeInOutCubic;
+        
+        if (elapsed < duration) {
+            requestAnimationFrame(animateScroll);
+        }
+    }
+    
+    return new Promise(resolve => {
+        requestAnimationFrame((timestamp) => {
+            animateScroll(timestamp);
+            setTimeout(resolve, duration);
+        });
+    });
+}
+
+// Helper function to check if element is in the middle of the viewport
+function isElementInMiddleViewport(el) {
+    const rect = el.getBoundingClientRect();
+    const containerRect = el.parentElement.getBoundingClientRect();
+    const middle = containerRect.top + containerRect.height / 2;
+    return rect.top <= middle && rect.bottom >= middle;
 }
 
 function createGalleryItem(item, index) {

@@ -117,15 +117,66 @@ body {
     justify-content: center;
     overflow: hidden;
     container-type: inline-size;
-    background: linear-gradient(145deg, #fff0f5, #ffe4e1);
-    /* background: rgba(255, 255, 255, 0.05); */
-    border-radius: 40px;
+    /* background: linear-gradient(145deg, #ffd1f5, #efb4f1); */
+    /* background: linear-gradient(145deg, #ffd1ff, #f3c6f8, #d9b3ff); */
+    /* background: linear-gradient(145deg, #ffb6e6, #c8a2ff, #9ab3ff);
+    background: linear-gradient(145deg, #ffd6e0, #e0bbff, #b8c0ff);
+    background: linear-gradient(145deg, #ffafcc, #cdb4db, #a2d2ff);
+    background: linear-gradient(145deg, #ffd1dc, #e2b0ff, #b388eb);
+    background: linear-gradient(145deg, #ffb7d5, #e7c6ff, #c8b6ff); */
+    
+    background:
+        linear-gradient(200deg, #ffd1f5, #efb4f1),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%13noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 20% 29%, rgba(255, 255, 255, 0.8) 0%, transparent 0%),
+        radial-gradient(circle at 198% 70%, rgba(255, 255, 255, 0.7) 0%, transparent 40%),
+        linear-gradient(145deg, 
+            rgba(255, 182, 193, 0.8) 0%, 
+            rgba(255, 218, 185, 0.7) 25%, 
+            rgba(255, 239, 213, 0.7) 50%, 
+            rgba(221, 160, 221, 0.7) 75%, 
+            rgba(186, 85, 211, 0.8) 100%
+        );
+    background-blend-mode: overlay, overlay, overlay, normal;
+    border-radius: min(8svh, 8svw);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset,
                 0 0 30px rgba(255, 255, 255, 0.1) inset;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* border: 1px solid rgba(255, 255, 255, 0.2); */
     z-index: 1;
+    /* background: 
+        linear-gradient(200deg, #ffd1f5, #efb4f1),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%-11E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%13noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 20%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 33%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 46%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 59%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 72%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(217, 188, 242, 0.1) 85%, transparent 0%),
+        linear-gradient(145deg, 
+            rgba(255, 182, 193, 0.8) 0%, 
+            rgba(255, 218, 185, 0.7) 25%, 
+            rgba(255, 239, 213, 0.7) 50%, 
+            rgba(221, 160, 221, 0.7) 75%, 
+            rgba(186, 85, 211, 0.8) 100%
+        ); */
+    /* background:
+        linear-gradient(200deg, #ffd1f5, #efb4f1),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%-11E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%13noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 10%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 26%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 39%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 52%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(255, 255, 255, 0.1) 65%, transparent 0%),
+        radial-gradient(circle at 10% 22%, rgba(217, 188, 242, 0.1) 76%, transparent 0%),
+        linear-gradient(145deg, 
+            rgba(255, 182, 193, 0.8) 0%, 
+            rgba(255, 218, 185, 0.7) 25%, 
+            rgba(255, 239, 213, 0.7) 50%, 
+            rgba(221, 160, 221, 0.7) 75%, 
+            rgba(186, 85, 211, 0.8) 100%
+        ); */
 }
 
 .time-text {
@@ -174,7 +225,8 @@ body {
     position: absolute;
     top: 35%;
     left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%) translateY(60cqw);
+    scale: 0;
     opacity: 0;
     width: 90%;
     max-width: 90%;
@@ -188,7 +240,15 @@ body {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 10;
-    animation: slideIn 0.5s forwards;
+    transition: all 0.4s ease;
+    transform-origin: left center; 
+    visibility: hidden;
+}
+.notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    scale: 1;
+    visibility: visible;
 }
 .notification:hover {
     transform: translateX(-50%) translateY(0) scale(1.02);
@@ -304,7 +364,7 @@ body {
     align-items: flex-end;
     padding-bottom: 20cqw;
     z-index: 100;
-    border-radius: 40px;
+    border-radius: min(8svh, 8svw);
     pointer-events: none; /* Allow clicks to pass through when hidden */
 }
 

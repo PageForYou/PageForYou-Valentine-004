@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Valentine's Special</title>
+    <link rel="stylesheet" href="css/loading-screen.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/phone-menu-style.css">
     <link rel="stylesheet" href="css/gift-styles.css">
@@ -30,6 +31,24 @@
 <body>
     <div style="position: fixed; top: 10px; right: 10px; color: #ff4f9a; font-size: 0.8rem; z-index: 888; background: rgba(255, 255, 255, 0.8); padding: 4px 12px; border-radius: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.5); text-shadow: 0 1px 1px rgba(0,0,0,0.1);">
         v1.0.12 (update gallery)
+    </div>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="heart-progress-container">
+                <div class="heart-progress-bg">
+                    <svg viewBox="0 0 100 100" class="heart-svg">
+                        <path class="heart-path" d="M50,30 a20,20 0 0 1 40,0 c0,20 -40,40 -40,60 c0,-20 -40,-40 -40,-60 a20,20 0 0 1 40,0"/>
+                    </svg>
+                </div>
+                <div class="heart-progress-fill">
+                    <svg viewBox="0 0 100 100" class="heart-svg">
+                        <path class="heart-path" d="M50,30 a20,20 0 0 1 40,0 c0,20 -40,40 -40,60 c0,-20 -40,-40 -40,-60 a20,20 0 0 1 40,0"/>
+                    </svg>
+                </div>
+                <div class="loading-percent">0%</div>
+            </div>
+            <div class="loading-text">Loading your special moment...</div>
+        </div>
     </div>
     <div class="custom-cursor"></div>
     <div class="gift-content-outside-background">
@@ -95,7 +114,7 @@
             </div>
             
             <div class="gallery-overlay scrollable-element">
-                <div class="gallery-items-container"></div>
+                <div class="gallery-items-container scrollable-element"></div>
                 <button class="close-gallery" style="display: none;">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -110,6 +129,7 @@
         </div>
     </div>
     <script src="js/page-home.js"></script>
+    <script src="js/loading-screen.js"></script>
     <script src="js/page-chat.js"></script>
 </body>
 </html>

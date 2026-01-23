@@ -1,3 +1,6 @@
+window.scanVerifyTime = 2000;
+window.scanWaitTime = 500;
+
 // Function to reset scan and show phone menu
 function resetScanAndShowMenu() {
     const overlay = document.querySelector('.unlock-overlay');
@@ -53,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Preload customer images
     function preloadCustomerImages(customerId) {
         const preloadedImages = [];
-        for (let i = 1; i <= 20; i++) {
-            const imageNumber = i.toString().padStart(2, '0');
+        const imageNumbers = ["01", "02", "03", "04", "05", "06", "Q01"];
+        imageNumbers.forEach(imageNumber => {
             const img = new Image();
             img.onerror = function() {
                 const index = preloadedImages.indexOf(img);
@@ -64,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             img.src = `/customers/${customerId}/img/${imageNumber}.jpg`;
             preloadedImages.push(img);
-        }
+        });
         return preloadedImages;
     }
  
@@ -83,6 +86,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     phoneContainer.style.backgroundRepeat = 'no-repeat';
                 }
             }
+            if (data.chatBackground) {
+                const chatContainer = document.querySelector('.chat-messages');
+                if (chatContainer) {
+                    chatContainer.style.backgroundImage = `url('/customers/${id}/img/${data.chatBackground}')`;
+                    chatContainer.style.backgroundSize = 'cover';
+                    chatContainer.style.backgroundPosition = 'center';
+                    chatContainer.style.backgroundRepeat = 'no-repeat';
+                }
+            }
         })
         .catch(error => console.error('Error loading customer data:', error));
     
@@ -90,8 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneContainer = document.querySelector('.phone-container');
     const profilePic = document.getElementById('profile-pic');
     const chatProfile = document.querySelector('.chat-profile-pic');
-    
-    const SCAN_TIME = 500;
 
     const cursor = document.querySelector('.custom-cursor');
     // Only initialize cursor for non-touch devices
@@ -167,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Reset the circle
         circle.style.strokeDashoffset = circumference;
-        circle.style.transition = `stroke-dashoffset ${SCAN_TIME}ms linear`;
+        circle.style.transition = `stroke-dashoffset ${window.scanWaitTime}ms linear`;
         
         // Animate the circle
         setTimeout(() => {
@@ -271,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Reset scan and show phone menu after a short delay
                         setTimeout(resetScanAndShowMenu, 500);
                     }
-                }, 555);
+                }, window.scanVerifyTime);
             }, 300);
             
             // Allow overlay closure after scan is complete
@@ -282,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         // Set a timeout for the scan
-        const scanComplete = setTimeout(onComplete, SCAN_TIME);
+        const scanComplete = setTimeout(onComplete, window.scanWaitTime);
         
         // Handle mouse up/leave to cancel the scan
         const cancelScan = () => {

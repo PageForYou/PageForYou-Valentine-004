@@ -1,3 +1,5 @@
+window.passQuiz = false;
+
 class QuizManager {
     constructor() {
         if (QuizManager.instance) {
@@ -47,13 +49,24 @@ class QuizManager {
         this.score = 0;
         this.answerSelected = false;
         
-        // // Set quiz header image
-        // if (this.currentQuiz.quizImage) {
-        //     this.quizHeaderImage.src = this.currentQuiz.quizImage;
-        //     this.quizHeaderImage.style.display = 'block';
-        // } else {
-        //     this.quizHeaderImage.style.display = 'none';
-        // }
+        // Add close button if passQuiz is true
+        if (window.passQuiz) {
+            // Remove existing close button if any
+            const existingCloseBtn = document.querySelector('.quiz-close-btn');
+            if (existingCloseBtn) {
+                existingCloseBtn.remove();
+            }
+            
+            // Create and append close button
+            const closeBtn = document.createElement('div');
+            closeBtn.className = 'quiz-close-btn';
+            closeBtn.innerHTML = '&times;';
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.closeQuiz();
+            });
+            this.quizContainer.appendChild(closeBtn);
+        }
         
         // Show quiz container with animation
         this.quizContainer.style.display = 'flex';
@@ -67,6 +80,9 @@ class QuizManager {
     }
     
     loadQuestion() {
+        // Update progress
+        const progress = ((this.currentQuestionIndex) / this.currentQuiz.quiz_items.length) * 100;
+        this.quizProgressBar.style.width = `${progress}%`;
         if (!this.currentQuiz || !this.currentQuiz.quiz_items) {
             console.error('Invalid quiz data');
             return;
@@ -79,10 +95,6 @@ class QuizManager {
         
         const question = this.currentQuiz.quiz_items[this.currentQuestionIndex];
         this.answerSelected = false;
-        
-        // Update progress
-        const progress = ((this.currentQuestionIndex) / this.currentQuiz.quiz_items.length) * 100;
-        this.quizProgressBar.style.width = `${progress}%`;
         
         // Set question text
         this.quizQuestion.textContent = question.question_text || '';
@@ -131,6 +143,7 @@ class QuizManager {
         options.forEach(option => {
             if (option.textContent === selectedOption) {
                 selectedElement = option;
+                option.classList.add('selected');
                 if (selectedOption === correctAnswer) {
                     // option.classList.add('correct');
                     this.score++;
@@ -152,10 +165,13 @@ class QuizManager {
         });
         
         // Move to next question after a delay
+        this.currentQuestionIndex++;
+        // Update progress
+        const progress = ((this.currentQuestionIndex) / this.currentQuiz.quiz_items.length) * 100;
+        this.quizProgressBar.style.width = `${progress}%`;
         setTimeout(() => {
-            this.currentQuestionIndex++;
             this.loadQuestion();
-        }, 1500);
+        }, 300);
     }
     
     showResults() {
@@ -173,13 +189,16 @@ class QuizManager {
         
         // Set result message based on score
         if (passed) {
+            window.passQuiz = true;
+            const quizThumbnailImage = document.querySelector('.quiz-thumbnail-image');
+            quizThumbnailImage.src = "../public/assets/img/quiz_finish_1.png";
             this.quizMessage.textContent = 'ยินดีด้วย! คุณตอบถูกทุกข้อเลยนะ';
-            this.quizResultImage.src = this.currentQuiz.quizFinishImage || '../assets/img/quiz_complete.png';
+            this.quizResultImage.src = './assets/img/cat_happy_1.png';
             this.quizCloseButton.style.display = 'block';
             this.quizRestartButton.style.display = 'none';
         } else {
             this.quizMessage.textContent = 'ยังไม่ผ่านนะ ลองใหม่อีกครั้งได้เลย!';
-            this.quizResultImage.src = '../assets/img/quiz_try_again.png';
+            this.quizResultImage.src = './assets/img/cat_sad_1.png';
             this.quizCloseButton.style.display = 'none';
             this.quizRestartButton.style.display = 'block';
         }
@@ -190,13 +209,17 @@ class QuizManager {
     }
     
     closeQuiz() {
-        this.quizContainer.classList.remove('active');
         // Reset for next time
         setTimeout(() => {
-            this.quizContainer.style.display = 'none';
+            this.quizContainer.classList.remove('active');
             this.quizResult.style.display = 'none';
             this.quizContent.style.display = 'block';
-        }, 300);
+            
+            // Set isWaiting to false in page-chat.js
+            if (window.isWaiting !== undefined) {
+                window.isWaiting = false;
+            }
+        }, 100);
     }
     
     restartQuiz() {

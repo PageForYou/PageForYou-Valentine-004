@@ -1,4 +1,7 @@
-let isWaiting = false;
+window.isWaiting = false;
+window.galleryWaitTime = 2000;
+window.chatWaitTime = 1000;
+window.giftContainterNo = 1;
 let isReachLimitCurrent = false;
 const isLocal = location.hostname === 'localhost';
 const urlParams = new URLSearchParams(window.location.search);
@@ -42,7 +45,7 @@ async function renderChatMessages(messages) {
                 </div>
             `;
         } else if (msg.sender === 'gallery') {
-            isWaiting = true;
+            window.isWaiting = true;
             messageDiv.innerHTML = `
                 <div class="gallery-container">
                     <img src="${msg.galleryImage}" alt="Gallery" class="gallery-thumbnail">
@@ -50,10 +53,10 @@ async function renderChatMessages(messages) {
             `;
             messageDiv.dataset.galleryItems = JSON.stringify(msg.gallery_items);
         } else if (msg.sender === 'quiz') {
-            isWaiting = true;
+            window.isWaiting = true;
             messageDiv.innerHTML = `
                 <div class="quiz-thumbnail">
-                    <img src="${msg.quizImage}" alt="Quiz" class="quiz-thumbnail-image">
+                    <img src="../public/assets/img/quiz_1.png" alt="Quiz" class="quiz-thumbnail-image">
                 </div>
             `;
             
@@ -72,7 +75,7 @@ async function renderChatMessages(messages) {
             });
         } else if (msg.sender === 'giftbox') {
             messageDiv.dataset.giftAmount = msg.gifts.length;
-            isWaiting = true;
+            window.isWaiting = true;
             const giftsHtml = msg.gifts.map((gift, index) => `
                 <div class="gift-item" data-index="${index}" data-opened="false">
                     <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
@@ -87,7 +90,7 @@ async function renderChatMessages(messages) {
                 `<div class="gift-label">${msg.label.replace('<quota>', msg.quota)}</div>` : '';
             
             messageDiv.innerHTML = `
-                <div class="gift-container">
+                <div class="gift-container-${window.giftContainterNo}">
                     <div class="gifts-wrapper">
                         ${giftsHtml}
                     </div>
@@ -106,6 +109,7 @@ async function renderChatMessages(messages) {
         }
         
         messagesContainer.appendChild(messageDiv);
+        await new Promise(resolve => setTimeout(resolve, 100));
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -117,9 +121,9 @@ async function renderChatMessages(messages) {
             } else if (msg.sender === 'gallery') {
                 initializeGallery(messageDiv);
             }
-            await sleep(500);
-            while (isWaiting === true) {
-                await sleep(1000);
+            await sleep(window.chatWaitTime);
+            while (window.isWaiting === true) {
+                await sleep(window.chatWaitTime);
             }
         })();
     }
@@ -237,7 +241,7 @@ function initializeGallery(galleryContainer) {
             overlay.style.display = 'none';
             document.body.style.overflow = 'auto';
             overlay.style.opacity = '1';
-            isWaiting = false; // Allow next message to load
+            window.isWaiting = false; // Allow next message to load
         }, 300);
     });
 
@@ -268,7 +272,7 @@ async function showGalleryItems(container, items) {
 
         // Wait before showing next item
         if (i < items.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, window.galleryWaitTime));
         } else {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -354,12 +358,10 @@ function createGalleryItem(item, index) {
                 <img src="${basePath}${item.imageName}.jpg" 
                      alt="${item.title}" 
                      style="width: 100%; 
-                            max-width: 600px; 
                             border-radius: 12px; 
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                            aspect-ratio: 16/9;
-                            object-fit: cover;
-                            margin: 0 auto 15px;">
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+                            aspect-ratio: ${item.aspectRatio};
+                            object-fit: cover;">
             </div>
             <h3 style="margin: 0 0 10px 0; color: #e91e63; font-size: 1.4em;">${item.title}</h3>
             <p style="margin: 0 auto; color: #555; line-height: 1.5; max-width: 600px;">${item.description}</p>
@@ -381,12 +383,7 @@ async function closeGift() {
     giftContentOutsideBg.style.visibility = "hidden";
     giftContentOutside.innerHTML = '';
     
-    if (isReachLimitCurrent) {
-        isWaiting = false;
-        isReachLimitCurrent = false; // reset for next gift box message type
-    }
-
-    const giftContainer = document.querySelector('.gift-container');
+    const giftContainer = document.querySelector(`.gift-container-${window.giftContainterNo}`);
     const giftItems = giftContainer.querySelectorAll('.gift-item');
     giftItems.forEach(async item => {
         const giftOpen = item.querySelector('.gift-open');
@@ -399,6 +396,12 @@ async function closeGift() {
             giftContent.classList.add('pop');
         }
     });
+    
+    if (isReachLimitCurrent) {
+        window.isWaiting = false;
+        isReachLimitCurrent = false; // reset for next gift box message type
+        window.giftContainterNo++;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

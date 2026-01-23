@@ -138,7 +138,7 @@ body {
             rgba(186, 85, 211, 0.8) 100%
         );
     background-blend-mode: overlay, overlay, overlay, normal;
-    border-radius: min(8svh, 8svw);
+    border-radius: min(4.3svh, 8svw);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset,
                 0 0 30px rgba(255, 255, 255, 0.1) inset;
@@ -364,7 +364,7 @@ body {
     align-items: flex-end;
     padding-bottom: 20cqw;
     z-index: 100;
-    border-radius: min(8svh, 8svw);
+    border-radius: min(4.3svh, 8svw);
     pointer-events: none; /* Allow clicks to pass through when hidden */
 }
 

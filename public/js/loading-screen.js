@@ -1,5 +1,5 @@
 // Loading screen functionality
-const LOADING_TIME = 1000; // 1 second
+const LOADING_TIME = 1000;
 let loadingStartTime = Date.now();
 
 function updateLoadingScreen(progress) {
@@ -9,8 +9,8 @@ function updateLoadingScreen(progress) {
     const notification = document.querySelector('.notification');
     
     // Calculate progress in the 5% to 95% range
-    const minProgress = 5;
-    const maxProgress = 95;
+    const minProgress = 20;
+    const maxProgress = 80;
     const adjustedProgress = minProgress + (progress / 100) * (maxProgress - minProgress);
     
     // Update progress bar (left to right, 5% to 95% of the width)

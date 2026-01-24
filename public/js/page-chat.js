@@ -30,7 +30,7 @@ async function renderChatMessages(messages) {
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
-        // if (i<9) continue;
+        if (i<6) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;
@@ -76,15 +76,20 @@ async function renderChatMessages(messages) {
         } else if (msg.sender === 'giftbox') {
             messageDiv.dataset.giftAmount = msg.gifts.length;
             window.isWaiting = true;
-            const giftsHtml = msg.gifts.map((gift, index) => `
-                <div class="gift-item" data-index="${index}" data-opened="false">
-                    <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
-                    <img src="${gift.gift_open_image}" alt="Opened Gift" class="gift-open" style="display: none;">
-                    <div class="gift-content-wrapper">
-                        <img src="${gift.gift_image}" alt="Gift Content" class="gift-content" style="display: none;">
+            const shuffledGiftImages = [...msg.gifts].sort(() => Math.random() - 0.5).map(g => g.gift_image);
+            const giftsHtml = msg.gifts.map((gift, index) => {
+                // Use the shuffled image for this gift
+                const shuffledImage = shuffledGiftImages[index];
+                return `
+                    <div class="gift-item" data-index="${index}" data-opened="false">
+                        <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
+                        <img src="${gift.gift_open_image}" alt="Opened Gift" class="gift-open" style="display: none;">
+                        <div class="gift-content-wrapper">
+                            <img src="${shuffledImage}" alt="Gift Content" class="gift-content" style="display: none;">
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             
             const labelHtml = msg.showLabel ? 
                 `<div class="gift-label">${msg.label.replace('<quota>', msg.quota)}</div>` : '';
@@ -341,7 +346,6 @@ function createGalleryItem(item, index) {
                      alt="${item.title}" 
                      style="width: 100%; 
                             border-radius: 12px; 
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
                             aspect-ratio: ${item.aspectRatio};
                             object-fit: cover;">
             </div>
@@ -359,7 +363,6 @@ function createGalleryItem(item, index) {
                      alt="${item.title}" 
                      style="width: 100%; 
                             border-radius: 12px; 
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
                             aspect-ratio: ${item.aspectRatio};
                             object-fit: cover;">
             </div>

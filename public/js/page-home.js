@@ -95,6 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     chatContainer.style.backgroundRepeat = 'no-repeat';
                 }
             }
+            if (data.Username) {
+                const notificationTitle = document.querySelector('.notification-title');
+                const chatName = document.querySelector('.chat-name');
+                notificationTitle.textContent = data.Username;
+                chatName.textContent = data.Username;
+            }
         })
         .catch(error => console.error('Error loading customer data:', error));
     

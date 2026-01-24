@@ -1,6 +1,6 @@
 window.isWaiting = false;
 window.galleryWaitTime = 2000;
-window.chatWaitTime = 1000;
+window.chatWaitTime = 2000;
 window.giftContainterNo = 1;
 let isReachLimitCurrent = false;
 const isLocal = location.hostname === 'localhost';
@@ -30,7 +30,7 @@ async function renderChatMessages(messages) {
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
-        if (i<6) continue;
+        // if (i<10) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;
@@ -52,6 +52,15 @@ async function renderChatMessages(messages) {
                 </div>
             `;
             messageDiv.dataset.galleryItems = JSON.stringify(msg.gallery_items);
+        } else if (msg.sender === 'letter') {
+            window.isWaiting = true;
+            messageDiv.innerHTML = `
+                <div class="letter-container">
+                    <img src="../public/assets/img/letter_close.png" class="letter-thumbnail">
+                </div>
+            `;
+            messageDiv.dataset.letterInsideImage = msg.letterInsideImage;
+            messageDiv.dataset.letterText = msg.letterText;
         } else if (msg.sender === 'quiz') {
             window.isWaiting = true;
             messageDiv.innerHTML = `
@@ -125,6 +134,8 @@ async function renderChatMessages(messages) {
                 initializeGiftBox(messageDiv);
             } else if (msg.sender === 'gallery') {
                 initializeGallery(messageDiv);
+            } else if (msg.sender === 'letter') {
+                initializeLetter(messageDiv);
             }
             await sleep(window.chatWaitTime);
             while (window.isWaiting === true) {
@@ -256,6 +267,65 @@ function initializeGallery(galleryContainer) {
             closeBtn.click();
         }
     });
+}
+
+function initializeLetter(letterContainer) {
+    const basePath = isLocal ? `../customers/${customerId}/img/` : `../customers/${customerId}/img/`;
+    const thumbnail = letterContainer.querySelector('.letter-thumbnail');
+    const overlay = document.querySelector('.letter-overlay');
+    const closeBtn = overlay.querySelector('.close-letter');
+    const itemsContainer = overlay.querySelector('.letter-items-container');
+
+    thumbnail.addEventListener('click', async () => {
+        if (!thumbnail.src.includes("letter_open.png")) {
+            thumbnail.src = "../public/assets/img/letter_open.png";
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        const textToPrint = letterContainer.dataset.letterText;
+
+        itemsContainer.innerHTML = `
+            <div class="letter-content-wrapper">
+                <div class="letter-image-container">
+                    <img src="${basePath + letterContainer.dataset.letterInsideImage}" alt="Letter Content" class="letter-inside-image">
+                </div>
+                
+                <div class="letter-text-container">
+                    <div class="letter-text ghost-text" style="visibility: hidden;">${textToPrint}</div>
+                    
+                    <div class="letter-text" id="typing-text"></div>
+                </div>
+            </div>
+        `;
+
+        typeWriter("typing-text", textToPrint, 50);
+        closeBtn.style.display = 'block';
+    });
+
+    // Close button handler
+    closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('show');
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+            window.isWaiting = false; // Allow next message to load
+        }, 300);
+    });
+}
+
+function typeWriter(elementId, text, speed) {
+    let i = 0;
+    const element = document.getElementById(elementId);
+    element.innerHTML = ""; // เคลียร์ค่าว่างก่อนเริ่ม
+
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    typing();
 }
 
 async function showGalleryItems(container, items) {

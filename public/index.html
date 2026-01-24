@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Valentine's Special</title>
+    <link rel="stylesheet" href="css/letter-style.css">
     <link rel="stylesheet" href="css/loading-screen.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/phone-menu-style.css">
@@ -22,6 +23,8 @@
     <link rel="preload" as="image" href="assets/img/gift_pink_1_open.png">      
     <link rel="preload" as="image" href="assets/img/hand_cursor_click_32.png">  
     <link rel="preload" as="image" href="assets/img/hand_cursor_unclick_32.png">
+    <link rel="preload" as="image" href="assets/img/letter_close.png">
+    <link rel="preload" as="image" href="assets/img/letter_open.png">
     <link rel="preload" as="image" href="assets/img/loading_icon.png">
     <link rel="preload" as="image" href="assets/img/lock_icon.png">
     <link rel="preload" as="image" href="assets/img/prize_cosmetics.png">       
@@ -123,6 +126,16 @@
             <div class="gallery-overlay scrollable-element">
                 <div class="gallery-items-container scrollable-element"></div>
                 <button class="close-gallery" style="display: none;">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="letter-overlay scrollable-element">
+                <div class="letter-items-container scrollable-element"></div>
+                <button class="close-letter" style="display: none;">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>

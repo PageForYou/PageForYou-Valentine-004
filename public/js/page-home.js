@@ -1,5 +1,5 @@
 window.scanVerifyTime = 2000;
-window.scanWaitTime = 500;
+window.scanWaitTime = 1000;
 
 // Function to reset scan and show phone menu
 function resetScanAndShowMenu() {

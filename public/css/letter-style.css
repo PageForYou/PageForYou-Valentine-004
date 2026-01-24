@@ -1,0 +1,144 @@
+.letter-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.letter-thumbnail {
+    max-width: 60cqw;
+    max-height: 60cqw;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.letter-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #FCFBF4;
+    border-radius: min(4.3svh, 8svw);
+    padding: 5cqw;
+    box-sizing: border-box;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    visibility: hidden;
+    opacity: 0;
+    scale: 0;
+}
+
+.letter-overlay.show {
+    visibility: visible;
+    opacity: 1;
+    scale: 1;
+}
+
+.letter-items-container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.close-letter {
+    position: fixed;
+    bottom: 5%; /* ปรับขึ้นมานิดนึงให้ดูไม่ชิดขอบจอเกินไป */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10cqw;
+    height: 10cqw;
+    border-radius: 50%;
+    
+    /* ปรับสีใหม่ */
+    background: #BDB7AB; /* สีเดียวกับเส้นประ */
+    color: #FCFBF4;      /* สีตัวอักษรเป็นสีเดียวกับกระดาษ */
+    
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    /* เงาแบบนุ่มนวล ไม่ดำสนิท */
+    box-shadow: 0 4px 10px rgba(189, 183, 171, 0.4); 
+    transition: all 0.3s ease;
+}
+
+.close-letter:hover {
+    background: #A69F92; /* เข้มขึ้นเวลากด */
+    scale: 1.1;
+}
+
+.letter-image-container {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5cqw;       /* นี่คือค่า Gap คงที่ที่คุณต้องการ (เช่น 60px หรือ 5cqw) */
+}
+.letter-inside-image {
+    max-width: 60cqw;
+    max-height: 50svh;         /* ป้องกันไม่ให้รูปสูงเกินไปจนเบียดข้อความ */
+    object-fit: contain;
+    background-color: white;
+    padding: 3cqw;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+}
+
+.letter-content-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    /* padding: 10cqw 0; */
+    box-sizing: border-box;
+    margin-bottom: 8svh;
+    transform: translateY(-2.5%);
+}
+.letter-content-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -47.5%);
+    width: 100%;
+    height: 100%;
+    border: 1.5cqw dashed #d3d3d3;
+    border-radius: 5cqw;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.letter-text {
+    font-family: 'Courier New', Courier, monospace;
+    color: #4A4A4A;
+    font-size: 4cqw;
+    text-align: center;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap; /* เพื่อให้รองรับการขึ้นบรรทัดใหม่ตามที่พิมพ์มา */
+}
+
+/* ตัวพิมพ์จริง ให้วางทับตำแหน่งตัวจองพื้นที่ */
+#typing-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.letter-text-container {
+    position: relative;
+    width: 85%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+}

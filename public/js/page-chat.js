@@ -89,7 +89,7 @@ async function renderChatMessages(messages) {
     
     for (let i = 0; i < messages.length; i++) {
         // skip chat
-        if (i<10) continue;
+        // if (i<10) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;

@@ -8,6 +8,8 @@ html, body * {
 /* Custom cursor */
 .custom-cursor {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 32px;
     height: 32px;
     background-image: url('../assets/img/hand_cursor_unclick_32.png');
@@ -15,8 +17,9 @@ html, body * {
     background-repeat: no-repeat;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-10%, 0);
-    transition: transform 0.1s ease;
+    margin-left: -3px; 
+    will-change: transform;
+    transition: none; 
 }
 
 body.clicked .custom-cursor {
@@ -589,13 +592,13 @@ body {
 
 .floating-heart {
     position: fixed;
-    bottom: -100px; /* เริ่มจากนอกจอ */
-    pointer-events: none; /* กดทะลุได้ ไม่ขวางปุ่ม */
-    z-index: -1000;
-    background-image: url('../assets/img/heart_red.png');
+    bottom: -100px;
     background-size: contain;
     background-repeat: no-repeat;
-    will-change: transform; /* Optimize performance */
+    pointer-events: none;
+    z-index: 0;
+    /* หัวใจสำคัญ: บังคับให้ใช้ GPU ประมวลผล */
+    will-change: transform, opacity; 
 }
 
 @keyframes floatUp {

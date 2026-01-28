@@ -135,10 +135,11 @@
 .letter-text {
     font-family: 'Courier New', Courier, monospace;
     color: #4A4A4A;
-    font-size: 4cqw;
+    font-size: 3.7cqw;
     text-align: center;
     line-height: 1.6;
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* ตัวพิมพ์จริง ให้วางทับตำแหน่งตัวจองพื้นที่ */
@@ -206,7 +207,7 @@
 
 /* สถานะเริ่มต้น: เตรียมพร้อมลอยขึ้นและจาง */
 .char-unit {
-    display: inline-block; /* สำคัญ: เพื่อให้ลอยขึ้นได้ (translate) */
+    display: inline; /* สำคัญ: เพื่อให้ลอยขึ้นได้ (translate) */
     opacity: 0;
     /* transform: translateY(4px); เริ่มต้นต่ำกว่าปกติเล็กน้อย */
     transition: opacity 0.8s ease, transform 0.8s ease; /* ใช้ transition แทน animation */

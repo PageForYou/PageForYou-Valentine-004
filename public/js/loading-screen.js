@@ -1,42 +1,45 @@
-// Loading screen functionality
-let loadingStartTime = Date.now();
+// เก็บตัวแปรไว้ใน Scope ที่เข้าถึงได้ (Cache Elements)
+let loadingElements = null;
+let loadingStartTime = null;
+let lastPercent = -1; // ใช้เช็คเพื่อลดการอัปเดต Text
 
 function updateLoadingScreen(progress) {
-    const loadingScreen = document.querySelector('.loading-screen');
-    const progressFill = document.querySelector('.heart-progress-fill');
-    const percentElement = document.querySelector('.loading-percent');
-    const notification = document.querySelector('.notification');
+    // 1. ใช้ Elements ที่ถูก Cache ไว้แล้ว
+    const { loadingScreen, progressFill, percentElement, notification } = loadingElements;
     
-    // Calculate progress in the 5% to 95% range
     const minProgress = 20;
     const maxProgress = 80;
     const adjustedProgress = minProgress + (progress / 100) * (maxProgress - minProgress);
     
-    // Update progress bar (left to right, 5% to 95% of the width)
+    // Update progress bar
     progressFill.style.clipPath = `polygon(0 0, ${adjustedProgress}% 0, ${adjustedProgress}% 100%, 0% 100%)`;
     
-    // Display the actual progress percentage (0-100%)
-    const displayProgress = Math.min(100, Math.max(0, progress));
-    percentElement.textContent = `${Math.floor(displayProgress)}%`;
+    // 2. Performance Trick: อัปเดต Text ต่อเมื่อเลขจำนวนเต็มเปลี่ยนเท่านั้น
+    const currentPercent = Math.floor(Math.min(100, Math.max(0, progress)));
+    if (currentPercent !== lastPercent) {
+        percentElement.textContent = `${currentPercent}%`;
+        lastPercent = currentPercent;
+    }
     
-    // If loading is complete, trigger fade-out with scale
     if (progress >= 100) {
+        // Logic การปิดเหมือนเดิม แต่ใช้ตัวแปรที่ Cache ไว้
         setTimeout(() => {
             loadingScreen.classList.add('fade-out');
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
                 notification.style.display = 'block';
                 notification.classList.add('show');
-                window.AppAssets.audio.notification.play().catch(error => {console.log('Autoplay prevented:', error);});
+                window.AppAssets.audio.notification.play().catch(e => {});
             }, 800);
         }, 500);
     }
 }
 
-// Animate loading progress
-function animateLoading() {
-    const now = Date.now();
-    const elapsed = now - loadingStartTime;
+function animateLoading(timestamp) {
+    if (!loadingStartTime) loadingStartTime = timestamp;
+    
+    // 3. ใช้ timestamp ที่ rAF ส่งมาให้แทน Date.now()
+    const elapsed = timestamp - loadingStartTime;
     const progress = Math.min(100, (elapsed / window.loadingTime) * 100);
     
     updateLoadingScreen(progress);
@@ -46,24 +49,23 @@ function animateLoading() {
     }
 }
 
-// Start loading animation
 function initLoadingScreen() {
-    // Reset loading state
-    loadingStartTime = Date.now();
+    // 4. Cache DOM Elements ตั้งแต่เริ่มครั้งเดียว
+    loadingElements = {
+        loadingScreen: document.querySelector('.loading-screen'),
+        progressFill: document.querySelector('.heart-progress-fill'),
+        percentElement: document.querySelector('.loading-percent'),
+        notification: document.querySelector('.notification')
+    };
     
-    // Start the animation
+    lastPercent = -1;
+    loadingStartTime = null; // Reset สำหรับ rAF
     requestAnimationFrame(animateLoading);
 }
 
-// Initialize loading screen when DOM is ready
+// การเรียกใช้งานคงเดิม
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initLoadingScreen);
 } else {
     initLoadingScreen();
 }
-
-// Export for use in other files if needed
-window.loadingScreen = {
-    update: updateLoadingScreen,
-    init: initLoadingScreen
-};

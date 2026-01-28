@@ -103,31 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const cursor = document.querySelector('.custom-cursor');
     // Only initialize cursor for non-touch devices
     if (window.matchMedia('(pointer: fine)').matches) {
-        // Move custom cursor with mouse
         document.addEventListener('mousemove', (e) => {
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
-        });
-        // Change cursor on click
-        document.addEventListener('mousedown', () => {
-            document.body.classList.add('clicked');
-        });
-        document.addEventListener('mouseup', () => {
-            document.body.classList.remove('clicked');
-        });
-        // // Hide default cursor and show custom cursor when mouse enters the window
-        // document.addEventListener('mouseenter', () => {
-        //     cursor.style.opacity = '1';
-        // });
-        // // Optional: Hide custom cursor when mouse leaves the window
-        // document.addEventListener('mouseleave', () => {
-        //     cursor.style.opacity = '0';
-        // });
-        // // Make sure cursor is visible by default
-        // cursor.style.opacity = '1';
-    } else {
-        // Hide cursor on touch devices
-        cursor.style.display = 'none';
+            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        }, { passive: true });
     }
     
     if (!id) {
@@ -412,19 +390,11 @@ document.addEventListener('DOMContentLoaded', function() {
             `วัน${dayName}ที่ ${day} ${month} ${year}`;
     }
     
-    // Hide the main content if there's an error
     const mainContent = document.querySelector('.phone-container');
     if (errorMessage.classList.contains('hidden')) {
         mainContent.classList.remove('hidden');
-        // Update immediately and then every minute
         updateDateTime();
         setInterval(updateDateTime, 6000);
-        
-        // // Add animation class after a short delay to make it look like a real notification
-        // setTimeout(() => {
-        //     const notification = document.querySelector('.notification');
-        //     notification.style.animation = 'slideIn 0.5s ease-out forwards';
-        // }, 500);
     } else {
         mainContent.style.display = 'none';
     }
@@ -432,39 +402,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function startHeartAnimation() {
     const screenWidth = window.innerWidth;
-    const minSize = 30; 
-    const maxSize = 60; 
-    const baseDuration = 8; 
     const generationInterval = 1500 / (screenWidth / 150); 
+    const heartImagePath = "./assets/img/heart_red.png";
 
     setInterval(() => {
         const heart = document.createElement('div');
-        heart.className = 'floating-heart';
-
-        const size = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
+        const size = Math.floor(Math.random() * 31) + 30; // 30-60px
+        const duration = 8 * (size / 30);
         const posX = Math.random() * screenWidth;
-        const duration = baseDuration * (size / minSize);
-        const rotate = (Math.random() * 40 - 20) + 'deg';
+        const rotate = (Math.random() * 40 - 20);
 
-        Object.assign(heart.style, {
-            width: `${size}px`,
-            height: `${size}px`,
-            left: `${posX}px`,
-            position: 'fixed',
-            bottom: '-100px',
-            zIndex: '0',
-            backgroundImage: "url('./assets/img/heart_red.png')", 
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            animation: `floatUp ${duration}s linear forwards`,
-            pointerEvents: 'none'
-        });
-
-        // ส่งตัวแปร rotate เข้าไปใน CSS
-        heart.style.setProperty('--random-rotate', rotate);
+        heart.className = 'floating-heart';
+        
+        heart.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${posX}px;
+            background-image: url('${heartImagePath}');
+            animation: floatUp ${duration}s linear forwards;
+            --random-rotate: ${rotate}deg;
+        `;
 
         document.body.appendChild(heart);
-
-        setTimeout(() => { heart.remove(); }, duration * 1000);
+        heart.addEventListener('animationend', () => heart.remove(), { once: true });
+        
     }, generationInterval);
 }

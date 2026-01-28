@@ -33,38 +33,51 @@ async function loadChatMessages() {
     }
 }
 
-function fadeAndSlowStop(audio, duration = 10000) {
-    audio.dataset.isFading = "true";
-    
-    const startVolume = audio.volume;
-    const startRate = audio.playbackRate;
-    const intervalTime = 100; 
-    const steps = duration / intervalTime; // เช่น 15000 / 100 = 150 รอบ
-    
-    const volumeStep = startVolume / steps;
-    const rateStep = (startRate - 0.5) / steps;
+// เก็บ AudioContext ไว้ข้างนอกเพื่อใช้ซ้ำ
+let audioCtx;
+let audioSource;
+let gainNode;
 
-    let currentStep = 0; // เพิ่มตัวนับรอบตรงนี้
+function fadeAndSlowStop(audio, duration) {
+    audio.dataset.isFading = "true";
+
+    // 1. เริ่มต้น AudioContext (Safari ต้องการเวทย์มนต์ตรงนี้หน่อย)
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioSource = audioCtx.createMediaElementSource(audio);
+        gainNode = audioCtx.createGain();
+        audioSource.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+    }
+
+    // กลับมาเริ่มที่ความดังปกติก่อน
+    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+    
+    // 2. สั่ง Fade เสียงแบบนุ่มนวล (Safari ยอมรับวิธีนี้)
+    // ลดจาก 1 เหลือ 0.01 (ถ้าใช้ 0 เลยบางทีมันจะไม่นวล) ในเวลา duration
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration / 1000));
+
+    // 3. ส่วนลดความเร็ว (PlaybackRate) ใช้ setInterval เดิมได้เพราะ Safari ยอมให้แก้
+    const startRate = audio.playbackRate;
+    const intervalTime = 100;
+    const steps = duration / intervalTime;
+    const rateStep = (startRate - 0.5) / steps;
+    let currentStep = 0;
 
     const fadeEffect = setInterval(() => {
-        currentStep++; // นับรอบที่รัน
-
-        // 1. ลดความดัง (ใช้ Math.max เพื่อไม่ให้ติดลบ)
-        audio.volume = Math.max(0, audio.volume - volumeStep);
-
-        // 2. ลดความเร็ว
+        currentStep++;
+        
+        // ลดความเร็ว
         audio.playbackRate = Math.max(0.5, audio.playbackRate - rateStep);
 
-        // 3. เงื่อนไขหยุด: เช็คจาก "จำนวนรอบ" ที่รันไปแล้ว
         if (currentStep >= steps) {
             clearInterval(fadeEffect);
             audio.pause();
             
-            // คืนค่า
-            audio.volume = startVolume;
+            // รีเซ็ตค่าเพื่อเปิดรอบหน้า
             audio.playbackRate = startRate;
+            gainNode.gain.setValueAtTime(1, audioCtx.currentTime); // คืนค่าเสียง
             delete audio.dataset.isFading;
-            console.log("Fade complete at exactly:", duration, "ms");
         }
     }, intervalTime);
 }
@@ -442,7 +455,7 @@ function typeWriter(elementId, text, speed, audioToFade) {
                 if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
                     fadeStarted = true;
                     // ใช้ 15000 ตามที่คุณต้องการ
-                    fadeAndSlowStop(audioToFade, 15000); 
+                    fadeAndSlowStop(audioToFade, 20000); 
                 }
 
                 i++;

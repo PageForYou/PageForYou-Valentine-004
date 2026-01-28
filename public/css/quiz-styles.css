@@ -79,9 +79,11 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.quiz-option:hover {
-    background-color: #fff0f5;
-    box-shadow: 0 6px 15px rgba(255, 182, 193, 0.4);
+@media (hover: hover) {
+    .quiz-option:hover {
+        background-color: #fff0f5;
+        box-shadow: 0 6px 15px rgba(255, 182, 193, 0.4);
+    }
 }
 
 .quiz-option.selected {
@@ -165,9 +167,11 @@
     color: #666;
 }
 
-.quiz-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+@media (hover: hover) {
+    .quiz-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
 }
 
 .quiz-button:active {

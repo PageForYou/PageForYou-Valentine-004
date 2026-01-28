@@ -250,10 +250,12 @@ body {
     scale: 1;
     visibility: visible;
 }
-.notification:hover {
-    transform: translateX(-50%) translateY(0) scale(1.02);
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25),
-                0 15px 25px -5px rgba(0, 0, 0, 0.15);
+@media (hover: hover) {
+    .notification:hover {
+        transform: translateX(-50%) translateY(0) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25),
+                    0 15px 25px -5px rgba(0, 0, 0, 0.15);
+    }
 }
 
 .notification-content {
@@ -344,10 +346,12 @@ body {
     background-position: center;
     opacity: 0.9;
 }
-.unlock:hover {
-    transform: translateX(-50%) translateY(0) scale(1.02);
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25),
-                0 15px 25px -5px rgba(0, 0, 0, 0.15);
+@media (hover: hover) {
+    .unlock:hover {
+        transform: translateX(-50%) translateY(0) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25),
+                    0 15px 25px -5px rgba(0, 0, 0, 0.15);
+    }
 }
 
 .unlock-overlay {
@@ -581,4 +585,22 @@ body {
 .scrollable-element {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.floating-heart {
+    position: fixed;
+    bottom: -100px; /* เริ่มจากนอกจอ */
+    pointer-events: none; /* กดทะลุได้ ไม่ขวางปุ่ม */
+    z-index: -1000;
+    background-image: url('../assets/img/heart_red.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    will-change: transform; /* Optimize performance */
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-120vh) rotate(var(--random-rotate));
+        opacity: 0;
+    }
 }

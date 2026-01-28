@@ -88,7 +88,7 @@
                 {
                     "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
                     "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_money_500_big.png",
+                    "gift_image": "../public/assets/img/prize_500_text.png",
                     "gift_description": "เงิน 500 บาท"
                 }
             ],

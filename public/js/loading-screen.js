@@ -1,5 +1,4 @@
 // Loading screen functionality
-const LOADING_TIME = 1000;
 let loadingStartTime = Date.now();
 
 function updateLoadingScreen(progress) {
@@ -28,7 +27,8 @@ function updateLoadingScreen(progress) {
                 loadingScreen.style.display = 'none';
                 notification.style.display = 'block';
                 notification.classList.add('show');
-            }, 800); // Match this with the CSS transition duration
+                window.AppAssets.audio.notification.play().catch(error => {console.log('Autoplay prevented:', error);});
+            }, 800);
         }, 500);
     }
 }
@@ -37,7 +37,7 @@ function updateLoadingScreen(progress) {
 function animateLoading() {
     const now = Date.now();
     const elapsed = now - loadingStartTime;
-    const progress = Math.min(100, (elapsed / LOADING_TIME) * 100);
+    const progress = Math.min(100, (elapsed / window.loadingTime) * 100);
     
     updateLoadingScreen(progress);
     

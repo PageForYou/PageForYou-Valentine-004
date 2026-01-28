@@ -17,7 +17,11 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: #FCFBF4;
+    /* background-color: #FCFBF4; */
+    background-image: url('../assets/img/letter_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: min(4.3svh, 8svw);
     padding: 5cqw;
     box-sizing: border-box;
@@ -41,8 +45,9 @@
 .letter-items-container {
     width: 100%;
     height: 100%;
-    margin: 0 auto;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* ดึงทุกอย่างมากลางแนวตั้ง */
 }
 
 .close-letter {
@@ -69,25 +74,37 @@
     transition: all 0.3s ease;
 }
 
-.close-letter:hover {
-    background: #A69F92; /* เข้มขึ้นเวลากด */
-    scale: 1.1;
+@media (hover: hover) {
+    .close-letter:hover {
+        background: #A69F92; /* เข้มขึ้นเวลากด */
+        scale: 1.1;
+    }
 }
 
 .letter-image-container {
-    z-index: 1;
+    position: relative;
     display: flex;
     justify-content: center;
-    margin-bottom: 5cqw;       /* นี่คือค่า Gap คงที่ที่คุณต้องการ (เช่น 60px หรือ 5cqw) */
+    align-items: center;
+    margin-bottom: 5cqw;
+    z-index: 1;
 }
 .letter-inside-image {
-    max-width: 60cqw;
-    max-height: 50svh;         /* ป้องกันไม่ให้รูปสูงเกินไปจนเบียดข้อความ */
+    position: relative;
+    max-width: 55cqw;
+    max-height: 50svh;
     object-fit: contain;
-    background-color: white;
-    padding: 3cqw;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    border-radius: 2px;
+    z-index: 2;
+    pointer-events: none;
+}
+.user-photo {
+    position: absolute;
+    z-index: 1;
+    width: 90%;
+    height: 85%;
+    top: 5%;
+    object-fit: cover;
+    left: 5%;
 }
 
 .letter-content-wrapper {
@@ -98,9 +115,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    /* padding: 10cqw 0; */
     box-sizing: border-box;
-    margin-bottom: 8svh;
     transform: translateY(-2.5%);
 }
 .letter-content-wrapper::before {
@@ -124,21 +139,67 @@
     text-align: center;
     line-height: 1.6;
     word-wrap: break-word;
-    white-space: pre-wrap; /* เพื่อให้รองรับการขึ้นบรรทัดใหม่ตามที่พิมพ์มา */
 }
 
 /* ตัวพิมพ์จริง ให้วางทับตำแหน่งตัวจองพื้นที่ */
 #typing-text {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative; /* เปลี่ยนจาก absolute เป็น relative เพื่อให้มันกินพื้นที่ความสูงจริง */
+    display: inline-block;
     width: 100%;
+    word-break: break-word; /* ให้ตัดคำได้เมื่อยาวเกิน */
+    white-space: pre-wrap;  /* รักษาระยะเว้นวรรค */
 }
 
 .letter-text-container {
     position: relative;
     width: 85%;
-    max-width: 500px;
-    display: flex;
-    justify-content: center;
+    display: block; /* เปลี่ยนจาก flex เป็น block เพื่อให้ span เรียงตัวตามปกติ */
+    text-align: center;
+    min-height: 1.6em; /* จองพื้นที่บรรทัดแรกไว้กันวูบ */
+}
+
+/* ตัวอักษรที่กำลังพิมพ์ */
+.char-fade {
+    opacity: 0;
+    animation: fadeInChar 0.8s ease forwards; /* ปรับเวลา 0.8s ให้ช้า/เร็วตามชอบ */
+}
+
+@keyframes fadeInChar {
+    from { opacity: 0; transform: translateY(2px); } /* แถมเลื่อนขึ้นนิดๆ จะดูละมุนมาก */
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ส่วนตัวอักษรล่องหน (Ghost) สำหรับจองที่ */
+.char-ghost {
+    color: transparent;
+    user-select: none;
+}
+
+.click-to-close {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    opacity: 0;
+    z-index: 1001;
+    pointer-events: none; /* เพื่อไม่ให้ตัวหนังสือขวางการคลิก overlay */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Animation กระพริบนุ่มๆ */
+.pulse-text {
+    animation: pulseFade 2s infinite ease-in-out;
+}
+
+@keyframes pulseFade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* คลาสสำหรับโชว์ข้อความตอนเริ่ม */
+.click-to-close.visible {
+    opacity: 1;
+    transition: opacity 1s ease;
 }

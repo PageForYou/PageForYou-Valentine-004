@@ -253,10 +253,12 @@
     transition: all 0.3s ease;
 }
 
-.quiz-close-btn:hover {
-    background: #ff4f9a;
-    color: white;
-    transform: scale(1.1);
+@media (hover: hover) {
+    .quiz-close-btn:hover {
+        background: #ff4f9a;
+        color: white;
+        transform: scale(1.1);
+    }
 }
 
 .close-gallery {

@@ -1,6 +1,3 @@
-window.scanVerifyTime = 2000;
-window.scanWaitTime = 1000;
-
 // Function to reset scan and show phone menu
 function resetScanAndShowMenu() {
     const overlay = document.querySelector('.unlock-overlay');
@@ -54,25 +51,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const isLocal = location.hostname === 'localhost';
  
     // Preload customer images
-    function preloadCustomerImages(customerId) {
-        const preloadedImages = [];
-        const imageNumbers = ["01", "02", "03", "04", "05", "06", "Q01"];
-        imageNumbers.forEach(imageNumber => {
-            const img = new Image();
-            img.onerror = function() {
-                const index = preloadedImages.indexOf(img);
-                if (index > -1) {
-                    preloadedImages.splice(index, 1);
-                }
-            };
-            img.src = `/customers/${customerId}/img/${imageNumber}.jpg`;
-            preloadedImages.push(img);
-        });
-        return preloadedImages;
-    }
- 
-    // Start preloading images
-    const preloadedImages = preloadCustomerImages(id);
+    const imageNumbers = ["01", "02", "03", "04", "05", "06", "Q01", "L01"];
+    const hiddenContainer = document.createElement('div');
+    hiddenContainer.style.display = 'none';
+    hiddenContainer.id = 'image-preload-container';
+    document.body.appendChild(hiddenContainer);
+
+    imageNumbers.forEach(imageNumber => {
+        const img = new Image();
+        img.src = `/customers/${id}/img/${imageNumber}.jpg`;
+        hiddenContainer.appendChild(img);
+    });
 
     fetch(`/customers/${id}/data.json`)
         .then(response => response.json())
@@ -89,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.chatBackground) {
                 const chatContainer = document.querySelector('.chat-messages');
                 if (chatContainer) {
-                    chatContainer.style.backgroundImage = `url('/customers/${id}/img/${data.chatBackground}')`;
+                    chatContainer.style.backgroundImage = data.chatBackground.includes("public") ? `url('${data.chatBackground}')` : `url('/customers/${id}/img/${data.chatBackground}')`;
                     chatContainer.style.backgroundSize = 'cover';
                     chatContainer.style.backgroundPosition = 'center';
                     chatContainer.style.backgroundRepeat = 'no-repeat';
@@ -108,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneContainer = document.querySelector('.phone-container');
     const profilePic = document.getElementById('profile-pic');
     const chatProfile = document.querySelector('.chat-profile-pic');
+
+    startHeartAnimation();
 
     const cursor = document.querySelector('.custom-cursor');
     // Only initialize cursor for non-touch devices
@@ -272,9 +263,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 identification.style.display = 'block';
                 void identification.offsetWidth; // Trigger reflow
                 identification.classList.add('show');
+                window.AppAssets.audio.unlock.play();
                 
                 // After 3 seconds, update to success state
                 setTimeout(() => {
+                    window.AppAssets.audio.scan_pass.play();
                     const verificationIcon = identification.querySelector('.verification-icon');
                     const verificationText = identification.querySelector('.verification-text');
                     
@@ -436,3 +429,42 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.style.display = 'none';
     }
 });
+
+function startHeartAnimation() {
+    const screenWidth = window.innerWidth;
+    const minSize = 30; 
+    const maxSize = 60; 
+    const baseDuration = 8; 
+    const generationInterval = 1500 / (screenWidth / 150); 
+
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+
+        const size = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
+        const posX = Math.random() * screenWidth;
+        const duration = baseDuration * (size / minSize);
+        const rotate = (Math.random() * 40 - 20) + 'deg';
+
+        Object.assign(heart.style, {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${posX}px`,
+            position: 'fixed',
+            bottom: '-100px',
+            zIndex: '0',
+            backgroundImage: "url('./assets/img/heart_red.png')", 
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            animation: `floatUp ${duration}s linear forwards`,
+            pointerEvents: 'none'
+        });
+
+        // ส่งตัวแปร rotate เข้าไปใน CSS
+        heart.style.setProperty('--random-rotate', rotate);
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => { heart.remove(); }, duration * 1000);
+    }, generationInterval);
+}

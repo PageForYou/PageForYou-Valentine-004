@@ -1,12 +1,12 @@
 {
     "phoneBackground": "",
-    "chatBackground": "",
+    "chatBackground": "../public/assets/img/chat_bg_pink.png",
     "Username": "Babe 💞",
     "identification": [
         { "title": "ข้อมูลการสแกนนิ้ว", "text": ""},
         { "title": "ชื่อเล่น: ", "text": "บี๋ริ"},
-        { "title": "หน้าตา: ", "text": "สวยที่สุดในโลกก"},
-        { "title": "นิสัย: ", "text": "น่ารักคิขุ แต่ดุเล็กน้อย"}
+        { "title": "หน้าตา: ", "text": "สวยที่สูดด"},
+        { "title": "นิสัย: ", "text": "น่าร้าก ขี้งอนนิ้ดดนึง"}
     ],
     "chat": [
         { "sender": "received", "message": "บี๋ค้าบบ เบ้บมีอะไรมาให้ 😎" },
@@ -16,7 +16,7 @@
                 {
                     "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
                     "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/valentine_giftset_4.png"
+                    "gift_image": "../public/assets/img/giftset_2_pink.png"
                 }
             ],
             "showLabel": false,
@@ -24,7 +24,7 @@
             "quota": 1
         },
         { "sender": "received", "message": "🎉 Happy Valentine’s Day naaa ♥️🥰" },
-        { "sender": "received", "message": "เบ้บมีของขวัญมาให้ด้วยนะ แต่บี๋ต้องตอบคำถามเบ้บให้ถูกทุกข้อก่อน 📄" },
+        { "sender": "received", "message": "เบ้บมีของขวัญมาให้ด้วย 🎁 แต่บี๋ต้องตอบคำถามเบ้บให้ถูกทุกข้อก่อน 📄" },
         { 
             "sender": "quiz", 
             "quiz_items": [
@@ -50,60 +50,60 @@
             ],
             "pass_score": 3
         },
-        { "sender": "received", "message": "เย่ผ่านแล้วว เก่งมากคั้บ" },
+        { "sender": "received", "message": "เย่ผ่านแล้วว เก่งมาก 💯" },
         { "sender": "received", "message": "เบ้บจาให้บี๋สุ่มเลือกรางวัลได้ 2 อย่างน้า เลือกดีๆล่ะ 🤭" },
         { 
             "sender": "giftbox", 
             "gifts": [
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_cosmetics.png",
+                    "gift_close_image": "../public/assets/img/GiftBox_1_red_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_red_open.png", 
+                    "gift_image": "../public/assets/img/prize_cosmetics_text.png",
                     "gift_description": "พาไปซื้อเครื่องสำอาง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_dessert.png",
+                    "gift_close_image": "../public/assets/img/GiftBox_1_blue_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_blue_open.png", 
+                    "gift_image": "../public/assets/img/prize_dessert_text.png",
                     "gift_description": "พาไปกินของหวาน"
                 },
                 {
                     "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
                     "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_food.png",
+                    "gift_image": "../public/assets/img/prize_food_text.png",
                     "gift_description": "กินอะไรก็ได้ฟรี 1 มื้อ"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_movie.png",
+                    "gift_close_image": "../public/assets/img/GiftBox_1_yellow_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_yellow_open.png", 
+                    "gift_image": "../public/assets/img/prize_movie_text.png",
                     "gift_description": "ดูหนังฟรี 1 เรื่อง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_wish.png",
+                    "gift_close_image": "../public/assets/img/GiftBox_1_green_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_green_open.png", 
+                    "gift_image": "../public/assets/img/prize_wish_text.png",
                     "gift_description": "ขออะไรก็ได้ 1 อย่าง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_money_500_big.png",
+                    "gift_close_image": "../public/assets/img/GiftBox_1_purple_close.png", 
+                    "gift_open_image": "../public/assets/img/GiftBox_1_purple_open.png", 
+                    "gift_image": "../public/assets/img/prize_500_text.png",
                     "gift_description": "เงิน 500 บาท"
                 }
             ],
             "showLabel": true,
-            "label": "กดเลือกของขวัญได้ <quota> กล่อง",
+            "label": "📦 กดเลือกของขวัญได้ <quota> กล่อง 📦",
             "quota": 2
         },
         { "sender": "received", "message": "เป็นไงบ้างง ของขวัญถูกใจมั้ยคะ 🥺 แคปจอมารับรางวัลได้เลยย" },
-        { "sender": "received", "message": "สุดท้ายนี้ เบ้บมีจดหมายมาให้บี๋อ่านคั้บ 💌" },
+        { "sender": "received", "message": "สุดท้ายละ เบ้บมีจดหมายมาให้บี๋อ่านคั้บ 💌" },
         { 
             "sender": "letter", 
             "letterImage": "../public/assets/img/letter_close.png",
             "letterOpenImage": "../public/assets/img/letter_open.png",
             "letterInsideImage": "L01.jpg",
-            "letterText": "สุขสันต์วันแห่งความรักนะครับบี๋ ของขวัญอีกหนึ่งชิ้นในวันวาเลนไทน์นี้ เบ้บขอให้เป็นตัวเบ้บเอง เป็นทั้งรอยยิ้ม ความสุข ที่พึ่ง ให้กับบี๋นะะ ขอบคุณที่เข้ามาเป็นความสดใสในชีวิตเบ้บ อยู่ด้วยกันในวันแห่งความรักแบบนี้ทุกปีเลยนะะ ❤️"
+            "letterText": "สุขสันต์วันแห่งความรักนะคะบี๋ ได้อยู่ด้วยกันอีกวาเลนไทน์แล้วนะ เบ้บมีความสุขมากๆเลย ขอบคุณที่อยู่เป็นความสุขของเบ้บตลอดมานะคับ เบ้บก็จาพยายามเป็นความสุข เป็นเซฟโซนที่ทำให้บี๋หายเหนื่อยเหมือนกัน วาเลนไทน์ปีต่อๆไป ก็อยู่ด้วยกันอีกนะ ^^ รักบี๋นะคับ ♡"
         },
         { "sender": "received", "message": "หวังว่าจะชอบนะ 🥹🥰" }
     ]

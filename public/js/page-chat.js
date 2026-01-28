@@ -1,11 +1,20 @@
-window.isWaiting = false;
-window.galleryWaitTime = 2000;
-window.chatWaitTime = 2000;
-window.giftContainterNo = 1;
 let isReachLimitCurrent = false;
 const isLocal = location.hostname === 'localhost';
 const urlParams = new URLSearchParams(window.location.search);
 const customerId = urlParams.get('id');
+
+const romanticAudio = window.AppAssets.audio.BG_SOUND_romantic;
+const LOOP_START = 1.5;
+const LOOP_END = 179;
+
+// 1. ตรวจสอบขณะเล่นเพลง (ถ้าถึง 179 วิ ให้วนกลับ)
+romanticAudio.addEventListener('timeupdate', function() {
+    // ถ้าถึงเวลาจบที่ตั้งไว้ และไม่ได้กำลังอยู่ในโหมด Fade
+    if (this.currentTime >= LOOP_END && !this.dataset.isFading) {
+        this.currentTime = LOOP_START;
+        this.play();
+    }
+});
 
 async function loadChatMessages() {
     try {
@@ -16,12 +25,50 @@ async function loadChatMessages() {
             throw new Error('Failed to load chat data');
         }
         const data = await response.json();
-        if (data.chat && Array.isArray(data.chat)) {
-            renderChatMessages(data.chat);
-        }
+        renderChatMessages(data.chat);
+        window.AppAssets.audio.BG_SOUND_romantic.currentTime = 1.5;
+        window.AppAssets.audio.BG_SOUND_romantic.play();
     } catch (error) {
         console.error('Error loading chat:', error);
     }
+}
+
+function fadeAndSlowStop(audio, duration = 10000) {
+    audio.dataset.isFading = "true";
+    
+    const startVolume = audio.volume;
+    const startRate = audio.playbackRate; // ปกติคือ 1.0
+    const intervalTime = 100; // อัปเดตทุก 0.1 วินาที
+    const steps = duration / intervalTime;
+    
+    const volumeStep = startVolume / steps;
+    const rateStep = (startRate - 0.5) / steps; // ลดลงเหลือ 0.5 (ถ้าต่ำกว่านี้เสียงจะเริ่มเพี้ยนจนฟังไม่ออก)
+
+    const fadeEffect = setInterval(() => {
+        // 1. ค่อยๆ ลดความดัง
+        if (audio.volume > volumeStep) {
+            audio.volume -= volumeStep;
+        } else {
+            audio.volume = 0;
+        }
+
+        // 2. ค่อยๆ ลดความเร็ว
+        if (audio.playbackRate > (0.5 + rateStep)) {
+            audio.playbackRate -= rateStep;
+        } else {
+            audio.playbackRate = 0.5;
+        }
+
+        // 3. เมื่อครบกำหนด หรือเสียงเบาจนจบแล้ว
+        if (audio.volume <= 0) {
+            clearInterval(fadeEffect);
+            audio.pause();
+            // คืนค่าเริ่มต้นไว้เผื่อเรียกใช้ใหม่รอบหน้า
+            audio.volume = startVolume;
+            audio.playbackRate = startRate;
+            delete audio.dataset.isFading;
+        }
+    }, intervalTime);
 }
 
 async function renderChatMessages(messages) {
@@ -30,6 +77,7 @@ async function renderChatMessages(messages) {
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
+        // skip chat
         // if (i<10) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
@@ -123,8 +171,9 @@ async function renderChatMessages(messages) {
         }
         
         messagesContainer.appendChild(messageDiv);
+        window.AppAssets.audio.pop.play();
         await new Promise(resolve => setTimeout(resolve, 100));
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        smoothScrollTo(messagesContainer, messagesContainer.scrollHeight, 800);
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         await (async () => {
@@ -192,6 +241,14 @@ function initializeGiftBox(giftContainer) {
         const giftContentOutsideBg = document.querySelector('.gift-content-outside-background');
         
         giftItem.classList.add('shake');
+        const shakeAudio = window.AppAssets.audio.shake3;
+        shakeAudio.currentTime = 1.3;
+        // shakeAudio.preservesPitch = false;
+        // shakeAudio.playbackRate = 1.5;
+        shakeAudio.play();
+        setTimeout(() => {
+            shakeAudio.pause();
+        }, 500)
         await new Promise(resolve => setTimeout(resolve, 1000));
         giftItem.classList.remove('shake');
         
@@ -213,6 +270,7 @@ function initializeGiftBox(giftContainer) {
         giftContentOutsideBg.classList.add('active');
         // Show the outside container with animation
         setTimeout(() => {
+            window.AppAssets.audio.got_prize.play();
             giftContentOutside.classList.add('active');
         }, 300);
     }
@@ -273,64 +331,133 @@ function initializeLetter(letterContainer) {
     const basePath = isLocal ? `../customers/${customerId}/img/` : `../customers/${customerId}/img/`;
     const thumbnail = letterContainer.querySelector('.letter-thumbnail');
     const overlay = document.querySelector('.letter-overlay');
-    const closeBtn = overlay.querySelector('.close-letter');
     const itemsContainer = overlay.querySelector('.letter-items-container');
 
+    // สร้าง Element สำหรับข้อความแนะนำ (ถ้ายังไม่มีในหน้าเว็บ)
+    let hintText = document.querySelector('.click-to-close');
+    if (!hintText) {
+        hintText = document.createElement('div');
+        hintText.className = 'click-to-close';
+        hintText.innerText = "...กดที่หน้าจอเพื่อปิดจดหมาย";
+        document.body.appendChild(hintText);
+    }
+
+    overlay.addEventListener('click', () => {
+        // เช็คว่าถ้า Hint Text ขึ้นมาแล้ว (แปลว่าพิมพ์จบและหน่วงเวลาครบแล้ว) ถึงจะให้ปิดได้
+        if (hintText.classList.contains('visible')) {
+            overlay.classList.remove('show');
+            hintText.classList.remove('visible', 'pulse-text');
+            overlay.style.cursor = 'default';
+            
+            setTimeout(() => {
+                document.body.style.overflow = 'auto';
+                window.isWaiting = false; // ปลดล็อคให้ข้อความถัดไปมาได้
+            }, 300);
+        }
+    });
+
     thumbnail.addEventListener('click', async () => {
+        // 1. จัดการรูปและเสียงเปิด
         if (!thumbnail.src.includes("letter_open.png")) {
             thumbnail.src = "../public/assets/img/letter_open.png";
             await new Promise(resolve => setTimeout(resolve, 300));
         }
+        window.AppAssets.audio.letter_open.currentTime = 0.3;
+        window.AppAssets.audio.letter_open.play();
+
+        // 2. เคลียร์สถานะเก่าและโชว์ Overlay
         overlay.classList.add('show');
+        hintText.classList.remove('visible', 'pulse-text'); // ซ่อนไว้ก่อน
         document.body.style.overflow = 'hidden';
+        
         const textToPrint = letterContainer.dataset.letterText;
+        const isAlreadyTyped = letterContainer.getAttribute('data-is-typed') === 'true';
 
         itemsContainer.innerHTML = `
             <div class="letter-content-wrapper">
                 <div class="letter-image-container">
-                    <img src="${basePath + letterContainer.dataset.letterInsideImage}" alt="Letter Content" class="letter-inside-image">
+                    <img src="../public/assets/img/polaroid.png" class="letter-inside-image">
+                    <img src="${basePath + letterContainer.dataset.letterInsideImage}" class="user-photo">
                 </div>
-                
                 <div class="letter-text-container">
-                    <div class="letter-text ghost-text" style="visibility: hidden;">${textToPrint}</div>
-                    
                     <div class="letter-text" id="typing-text"></div>
                 </div>
             </div>
         `;
 
-        typeWriter("typing-text", textToPrint, 50);
-        closeBtn.style.display = 'block';
-    });
+        const typingElement = document.getElementById('typing-text');
 
-    // Close button handler
-    closeBtn.addEventListener('click', () => {
-        overlay.classList.remove('show');
-        setTimeout(() => {
-            document.body.style.overflow = 'auto';
-            window.isWaiting = false; // Allow next message to load
-        }, 300);
+        // 3. จัดการการพิมพ์และหน่วงเวลาโชว์คำแนะนำปิด
+        if (isAlreadyTyped) {
+            typingElement.innerHTML = `<span>${textToPrint}</span>`;
+            // ถ้าเคยอ่านแล้ว หน่วง 1 วิพอให้เห็นคำแนะนำ
+            setTimeout(() => {
+                hintText.classList.add('visible', 'pulse-text');
+                overlay.style.cursor = 'pointer'; // เปลี่ยน cursor ให้รู้ว่ากดได้
+            }, 1000);
+        } else {
+            await typeWriter("typing-text", textToPrint, 50, window.AppAssets.audio.BG_SOUND_romantic);
+            letterContainer.setAttribute('data-is-typed', 'true');
+            
+            // หน่วง 5 วิหลังจากพิมพ์จบตามโจทย์
+            setTimeout(() => {
+                hintText.classList.add('visible', 'pulse-text');
+                overlay.style.cursor = 'pointer';
+            }, 5000);
+        }
     });
 }
 
-function typeWriter(elementId, text, speed) {
-    let i = 0;
-    const element = document.getElementById(elementId);
-    element.innerHTML = ""; // เคลียร์ค่าว่างก่อนเริ่ม
+function typeWriter(elementId, text, speed, audioToFade) {
+    return new Promise(resolve => {
+        const element = document.getElementById(elementId);
+        const cleanText = text.trim();
+        element.innerHTML = ''; 
 
-    function typing() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typing, speed);
+        const fragment = document.createDocumentFragment();
+        const characters = cleanText.split('').map(char => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'char-ghost'; 
+            fragment.appendChild(span);
+            return span;
+        });
+        element.appendChild(fragment);
+
+        // --- ส่วนคำนวณเวลาสำหรับ Fade ---
+        const totalCharacters = characters.length;
+        const totalTypingTime = totalCharacters * speed; // เวลาพิมพ์ทั้งหมด (ms)
+        const fadeStartTime = Math.max(0, totalTypingTime - 5000); // เริ่มก่อนจบ 5 วิ
+        let fadeStarted = false;
+
+        let i = 0;
+        const startTime = performance.now(); // จับเวลาเริ่มพิมพ์
+
+        function typing() {
+            if (i < characters.length) {
+                characters[i].className = 'char-fade';
+                
+                // เช็คว่าถึงเวลาต้องเริ่ม Fade หรือยัง
+                const elapsed = performance.now() - startTime;
+                if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
+                    fadeStarted = true;
+                    // สั่ง Fade ทั้งหมด 10 วินาที (เริ่มก่อนจบ 5 วิ + หลังจบ 5 วิ)
+                    fadeAndSlowStop(audioToFade, 15000); 
+                }
+
+                i++;
+                setTimeout(typing, speed);
+            } else {
+                resolve();
+            }
         }
-    }
-    typing();
+        typing();
+    });
 }
 
 async function showGalleryItems(container, items) {
     container.innerHTML = '';
-    container.style.overflow = 'hidden'; // Prevent user scrolling
+    container.style.overflow = 'hidden';
     
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
@@ -342,7 +469,6 @@ async function showGalleryItems(container, items) {
         itemElement.style.transform = 'translateY(0)';
         
         await new Promise(resolve => setTimeout(resolve, 100));
-        // Custom smooth scroll to the new item
         await smoothScrollTo(container, itemElement.offsetTop - (container.offsetHeight / 2) + (itemElement.offsetHeight / 2));
 
         // Wait before showing next item
@@ -457,6 +583,7 @@ async function closeGift() {
     giftContentOutside.innerHTML = '';
     
     const giftContainer = document.querySelector(`.gift-container-${window.giftContainterNo}`);
+    if (!giftContainer) return;
     const giftItems = giftContainer.querySelectorAll('.gift-item');
     giftItems.forEach(async item => {
         const giftOpen = item.querySelector('.gift-open');

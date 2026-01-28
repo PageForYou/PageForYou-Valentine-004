@@ -136,6 +136,7 @@ class QuizManager {
     }
     
     selectAnswer(selectedOption, correctAnswer) {
+        window.AppAssets.audio.fast_click.play();
         const options = this.quizOptions.querySelectorAll('.quiz-option');
         let selectedElement = null;
         
@@ -189,6 +190,7 @@ class QuizManager {
         
         // Set result message based on score
         if (passed) {
+            window.AppAssets.audio.correct.play();
             window.passQuiz = true;
             const quizThumbnailImage = document.querySelector('.quiz-thumbnail-image');
             quizThumbnailImage.src = "../public/assets/img/quiz_finish_1.png";
@@ -197,6 +199,7 @@ class QuizManager {
             this.quizCloseButton.style.display = 'block';
             this.quizRestartButton.style.display = 'none';
         } else {
+            window.AppAssets.audio.wrong.play();
             this.quizMessage.textContent = 'ยังไม่ผ่านนะ ลองใหม่อีกครั้งได้เลย!';
             this.quizResultImage.src = './assets/img/cat_sad_1.png';
             this.quizCloseButton.style.display = 'none';

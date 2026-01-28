@@ -419,51 +419,48 @@ function initializeLetter(letterContainer) {
 function typeWriter(elementId, text, speed, audioToFade) {
     return new Promise(resolve => {
         const element = document.getElementById(elementId);
-        const cleanText = text.trim();
+        const segments = Array.from(new Intl.Segmenter('th', { granularity: 'grapheme' }).segment(text.trim()));
         element.innerHTML = ''; 
-
-        const segmenter = new Intl.Segmenter('th', { granularity: 'grapheme' });
-        const segments = Array.from(segmenter.segment(cleanText));
 
         const fragment = document.createDocumentFragment();
         const characters = segments.map(s => {
+            if (s.segment === '\n') {
+                const br = document.createElement('br');
+                fragment.appendChild(br);
+                return br;
+            }
             const span = document.createElement('span');
             span.textContent = s.segment; 
-            span.className = 'char-unit'; // ใช้ Class พื้นฐาน
+            span.className = 'char-unit';
             fragment.appendChild(span);
             return span;
         });
         element.appendChild(fragment);
 
-        const totalCharacters = characters.length;
-        const totalTypingTime = totalCharacters * speed;
-        const fadeStartTime = Math.max(0, totalTypingTime - 5000);
-        let fadeStarted = false;
+        let startTime = null;
+        let lastInx = -1;
 
-        let i = 0;
-        const startTime = performance.now();
+        function render(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            
+            // คำนวณว่า ณ เวลานี้ ควรแสดงถึงตัวอักษรที่เท่าไหร่
+            const currentIdx = Math.floor(elapsed / speed);
 
-        function typing() {
-            if (i < characters.length) {
-                // ใช้ requestAnimationFrame เพื่อบอก Browser ว่า "ตาฉันจะวาดแล้วนะ" 
-                // ช่วยลดอาการบั๊กเรนเดอร์ข้ามคิวบน Safari
-                requestAnimationFrame(() => {
-                    characters[i].classList.add('appeared');
-                    i++;
-                });
+            // วนลูปโชว์ตัวอักษรที่ควรจะขึ้นมาแล้ว (เผื่อกรณีเครื่องกระตุก มันจะโผล่มาพร้อมกันทีเดียว ไม่ข้ามตัว)
+            for (let j = lastInx + 1; j <= currentIdx && j < characters.length; j++) {
+                characters[j].classList.add('appeared');
+                lastInx = j;
+            }
 
-                const elapsed = performance.now() - startTime;
-                // if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
-                //     fadeStarted = true;
-                //     fadeAndSlowStop(audioToFade, 15000); 
-                // }
-
-                setTimeout(typing, speed);
+            if (currentIdx < characters.length) {
+                requestAnimationFrame(render);
             } else {
                 resolve();
             }
         }
-        typing();
+
+        requestAnimationFrame(render);
     });
 }
 

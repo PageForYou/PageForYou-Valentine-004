@@ -140,6 +140,9 @@
     line-height: 1.6;
     word-wrap: break-word;
     white-space: pre-wrap;
+    word-break: break-all; /* สำคัญมาก: เพื่อให้ยอมตัดบรรทัดใน span */
+    overflow-wrap: break-word;
+    display: block;
 }
 
 /* ตัวพิมพ์จริง ให้วางทับตำแหน่งตัวจองพื้นที่ */
@@ -210,7 +213,7 @@
     display: inline; /* สำคัญ: เพื่อให้ลอยขึ้นได้ (translate) */
     opacity: 0;
     /* transform: translateY(4px); เริ่มต้นต่ำกว่าปกติเล็กน้อย */
-    transition: opacity 0.8s ease, transform 0.8s ease; /* ใช้ transition แทน animation */
+    transition: opacity 0.4s ease, transform 0.4s ease; /* ใช้ transition แทน animation */
     white-space: pre; /* รักษาระยะห่าง */
 }
 

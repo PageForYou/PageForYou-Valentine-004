@@ -37,36 +37,34 @@ function fadeAndSlowStop(audio, duration = 10000) {
     audio.dataset.isFading = "true";
     
     const startVolume = audio.volume;
-    const startRate = audio.playbackRate; // ปกติคือ 1.0
-    const intervalTime = 100; // อัปเดตทุก 0.1 วินาที
-    const steps = duration / intervalTime;
+    const startRate = audio.playbackRate;
+    const intervalTime = 100; 
+    const steps = duration / intervalTime; // เช่น 15000 / 100 = 150 รอบ
     
     const volumeStep = startVolume / steps;
-    const rateStep = (startRate - 0.5) / steps; // ลดลงเหลือ 0.5 (ถ้าต่ำกว่านี้เสียงจะเริ่มเพี้ยนจนฟังไม่ออก)
+    const rateStep = (startRate - 0.5) / steps;
+
+    let currentStep = 0; // เพิ่มตัวนับรอบตรงนี้
 
     const fadeEffect = setInterval(() => {
-        // 1. ค่อยๆ ลดความดัง
-        if (audio.volume > volumeStep) {
-            audio.volume -= volumeStep;
-        } else {
-            audio.volume = 0;
-        }
+        currentStep++; // นับรอบที่รัน
 
-        // 2. ค่อยๆ ลดความเร็ว
-        if (audio.playbackRate > (0.5 + rateStep)) {
-            audio.playbackRate -= rateStep;
-        } else {
-            audio.playbackRate = 0.5;
-        }
+        // 1. ลดความดัง (ใช้ Math.max เพื่อไม่ให้ติดลบ)
+        audio.volume = Math.max(0, audio.volume - volumeStep);
 
-        // 3. เมื่อครบกำหนด หรือเสียงเบาจนจบแล้ว
-        if (audio.volume <= 0) {
+        // 2. ลดความเร็ว
+        audio.playbackRate = Math.max(0.5, audio.playbackRate - rateStep);
+
+        // 3. เงื่อนไขหยุด: เช็คจาก "จำนวนรอบ" ที่รันไปแล้ว
+        if (currentStep >= steps) {
             clearInterval(fadeEffect);
             audio.pause();
-            // คืนค่าเริ่มต้นไว้เผื่อเรียกใช้ใหม่รอบหน้า
+            
+            // คืนค่า
             audio.volume = startVolume;
             audio.playbackRate = startRate;
             delete audio.dataset.isFading;
+            console.log("Fade complete at exactly:", duration, "ms");
         }
     }, intervalTime);
 }
@@ -78,7 +76,7 @@ async function renderChatMessages(messages) {
     
     for (let i = 0; i < messages.length; i++) {
         // skip chat
-        // if (i<10) continue;
+        if (i<10) continue;
         const msg = messages[i];
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${msg.sender} hidden-message`;
@@ -243,8 +241,6 @@ function initializeGiftBox(giftContainer) {
         giftItem.classList.add('shake');
         const shakeAudio = window.AppAssets.audio.shake3;
         shakeAudio.currentTime = 1.3;
-        // shakeAudio.preservesPitch = false;
-        // shakeAudio.playbackRate = 1.5;
         shakeAudio.play();
         setTimeout(() => {
             shakeAudio.pause();
@@ -414,34 +410,38 @@ function typeWriter(elementId, text, speed, audioToFade) {
         const cleanText = text.trim();
         element.innerHTML = ''; 
 
+        // 1. ใช้ Segmenter เพื่อแยกกลุ่มตัวอักษรภาษาไทยให้ถูกต้อง
+        // 'th' คือภาษาไทย, 'grapheme' คือแยกตามหน่วยที่ตามองเห็น
+        const segmenter = new Intl.Segmenter('th', { granularity: 'grapheme' });
+        const segments = Array.from(segmenter.segment(cleanText));
+
         const fragment = document.createDocumentFragment();
-        const characters = cleanText.split('').map(char => {
+        const characters = segments.map(s => {
             const span = document.createElement('span');
-            span.textContent = char;
+            // s.segment จะได้ตัวอักษรที่รวมสระ/วรรณยุกต์มาให้แล้ว เช่น "รั", "ก"
+            span.textContent = s.segment; 
             span.className = 'char-ghost'; 
             fragment.appendChild(span);
             return span;
         });
         element.appendChild(fragment);
 
-        // --- ส่วนคำนวณเวลาสำหรับ Fade ---
         const totalCharacters = characters.length;
-        const totalTypingTime = totalCharacters * speed; // เวลาพิมพ์ทั้งหมด (ms)
-        const fadeStartTime = Math.max(0, totalTypingTime - 5000); // เริ่มก่อนจบ 5 วิ
+        const totalTypingTime = totalCharacters * speed;
+        const fadeStartTime = Math.max(0, totalTypingTime - 5000);
         let fadeStarted = false;
 
         let i = 0;
-        const startTime = performance.now(); // จับเวลาเริ่มพิมพ์
+        const startTime = performance.now();
 
         function typing() {
             if (i < characters.length) {
                 characters[i].className = 'char-fade';
                 
-                // เช็คว่าถึงเวลาต้องเริ่ม Fade หรือยัง
                 const elapsed = performance.now() - startTime;
                 if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
                     fadeStarted = true;
-                    // สั่ง Fade ทั้งหมด 10 วินาที (เริ่มก่อนจบ 5 วิ + หลังจบ 5 วิ)
+                    // ใช้ 15000 ตามที่คุณต้องการ
                     fadeAndSlowStop(audioToFade, 15000); 
                 }
 

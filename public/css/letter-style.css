@@ -177,11 +177,11 @@
 
 .click-to-close {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 1%;
+    right: 1%;
     color: white;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
+    font-size: min(10cqw, 2cqh);
     opacity: 0;
     z-index: 1001;
     pointer-events: none; /* เพื่อไม่ให้ตัวหนังสือขวางการคลิก overlay */

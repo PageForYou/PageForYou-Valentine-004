@@ -106,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('mousemove', (e) => {
             cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
         }, { passive: true });
+    } else {
+        cursor.style.display = "none";
     }
     
     if (!id) {

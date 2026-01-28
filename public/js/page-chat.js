@@ -7,14 +7,13 @@ const romanticAudio = window.AppAssets.audio.BG_SOUND_romantic;
 const LOOP_START = 1.5;
 const LOOP_END = 179;
 
-// 1. ตรวจสอบขณะเล่นเพลง (ถ้าถึง 179 วิ ให้วนกลับ)
-romanticAudio.addEventListener('timeupdate', function() {
-    // ถ้าถึงเวลาจบที่ตั้งไว้ และไม่ได้กำลังอยู่ในโหมด Fade
-    if (this.currentTime >= LOOP_END && !this.dataset.isFading) {
-        this.currentTime = LOOP_START;
-        this.play();
+setInterval(() => {
+    const audio = window.AppAssets.audio.BG_SOUND_romantic;
+    if (audio.currentTime >= LOOP_END && !audio.dataset.isFading) {
+        audio.currentTime = LOOP_START;
+        audio.play();
     }
-});
+}, 500);
 
 async function loadChatMessages() {
     try {

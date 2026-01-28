@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isLocal = location.hostname === 'localhost';
  
     // Preload customer images
-    const imageNumbers = ["01", "02", "03", "04", "05", "06", "Q01", "L01"];
+    const imageNumbers = ["01", "02", "03", "04", "05", "Q01", "L01"];
     const hiddenContainer = document.createElement('div');
     hiddenContainer.style.display = 'none';
     hiddenContainer.id = 'image-preload-container';

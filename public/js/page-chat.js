@@ -94,6 +94,7 @@ async function renderChatMessages(messages) {
         messageDiv.className = `message ${msg.sender} hidden-message`;
         
         if (msg.sender === 'received') {
+            messageDiv.dataset.waitTime = msg.waitTime;
             messageDiv.innerHTML = `
                 <div class="message-avatar">
                     <img src="${imagePath}" alt="Profile" class="message-profile-pic">
@@ -196,9 +197,10 @@ async function renderChatMessages(messages) {
             } else if (msg.sender === 'letter') {
                 initializeLetter(messageDiv);
             }
-            await sleep(window.chatWaitTime);
+            const calculatedWaitTime = messageDiv.dataset.waitTime ? messageDiv.dataset.waitTime : window.chatWaitTime;
+            await sleep(calculatedWaitTime);
             while (window.isWaiting === true) {
-                await sleep(window.chatWaitTime);
+                await sleep(calculatedWaitTime);
             }
         })();
     }

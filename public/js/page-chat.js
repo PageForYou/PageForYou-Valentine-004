@@ -423,17 +423,14 @@ function typeWriter(elementId, text, speed, audioToFade) {
         const cleanText = text.trim();
         element.innerHTML = ''; 
 
-        // 1. ใช้ Segmenter เพื่อแยกกลุ่มตัวอักษรภาษาไทยให้ถูกต้อง
-        // 'th' คือภาษาไทย, 'grapheme' คือแยกตามหน่วยที่ตามองเห็น
         const segmenter = new Intl.Segmenter('th', { granularity: 'grapheme' });
         const segments = Array.from(segmenter.segment(cleanText));
 
         const fragment = document.createDocumentFragment();
         const characters = segments.map(s => {
             const span = document.createElement('span');
-            // s.segment จะได้ตัวอักษรที่รวมสระ/วรรณยุกต์มาให้แล้ว เช่น "รั", "ก"
             span.textContent = s.segment; 
-            span.className = 'char-ghost'; 
+            span.className = 'char-unit'; // ใช้ Class พื้นฐาน
             fragment.appendChild(span);
             return span;
         });
@@ -449,16 +446,19 @@ function typeWriter(elementId, text, speed, audioToFade) {
 
         function typing() {
             if (i < characters.length) {
-                characters[i].className = 'char-fade';
-                
-                const elapsed = performance.now() - startTime;
-                if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
-                    fadeStarted = true;
-                    // ใช้ 15000 ตามที่คุณต้องการ
-                    fadeAndSlowStop(audioToFade, 20000); 
-                }
+                // ใช้ requestAnimationFrame เพื่อบอก Browser ว่า "ตาฉันจะวาดแล้วนะ" 
+                // ช่วยลดอาการบั๊กเรนเดอร์ข้ามคิวบน Safari
+                requestAnimationFrame(() => {
+                    characters[i].classList.add('appeared');
+                    i++;
+                });
 
-                i++;
+                const elapsed = performance.now() - startTime;
+                // if (!fadeStarted && elapsed >= fadeStartTime && audioToFade) {
+                //     fadeStarted = true;
+                //     fadeAndSlowStop(audioToFade, 15000); 
+                // }
+
                 setTimeout(typing, speed);
             } else {
                 resolve();

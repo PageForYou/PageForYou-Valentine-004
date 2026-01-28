@@ -203,3 +203,18 @@
     opacity: 1;
     transition: opacity 1s ease;
 }
+
+/* สถานะเริ่มต้น: เตรียมพร้อมลอยขึ้นและจาง */
+.char-unit {
+    display: inline-block; /* สำคัญ: เพื่อให้ลอยขึ้นได้ (translate) */
+    opacity: 0;
+    /* transform: translateY(4px); เริ่มต้นต่ำกว่าปกติเล็กน้อย */
+    transition: opacity 0.8s ease, transform 0.8s ease; /* ใช้ transition แทน animation */
+    white-space: pre; /* รักษาระยะห่าง */
+}
+
+/* สถานะเมื่อพิมพ์ถึง: สั่งให้แสดงตัว */
+.char-unit.appeared {
+    opacity: 1;
+    transform: translateY(0);
+}

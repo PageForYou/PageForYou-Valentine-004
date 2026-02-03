@@ -50,18 +50,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const id = urlParams.get('id');
     const isLocal = location.hostname === 'localhost';
  
-    // Preload customer images
-    const imageNumbers = ["01", "02", "03", "04", "05", "Q01", "L01"];
-    const hiddenContainer = document.createElement('div');
-    hiddenContainer.style.display = 'none';
-    hiddenContainer.id = 'image-preload-container';
-    document.body.appendChild(hiddenContainer);
+    // // Preload customer images
+    // const imageNumbers = ["01", "02", "03", "04", "05", "Q01", "L01"];
+    // const hiddenContainer = document.createElement('div');
+    // hiddenContainer.style.display = 'none';
+    // hiddenContainer.id = 'image-preload-container';
+    // document.body.appendChild(hiddenContainer);
 
-    imageNumbers.forEach(imageNumber => {
-        const img = new Image();
-        img.src = `/customers/${id}/img/${imageNumber}.jpg`;
-        hiddenContainer.appendChild(img);
-    });
+    // imageNumbers.forEach(imageNumber => {
+    //     const img = new Image();
+    //     img.src = `/customers/${id}/img/${imageNumber}.jpg`;
+    //     hiddenContainer.appendChild(img);
+    // });
 
     fetch(`/customers/${id}/data.json`)
         .then(response => response.json())
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.chatBackground) {
                 const chatContainer = document.querySelector('.chat-messages');
                 if (chatContainer) {
-                    chatContainer.style.backgroundImage = data.chatBackground.includes("public") ? `url('${data.chatBackground}')` : `url('/customers/${id}/img/${data.chatBackground}')`;
+                    chatContainer.style.backgroundImage = `url('${window.getAssetUrl("h_1400", data.chatBackground)}')`;
                     chatContainer.style.backgroundSize = 'cover';
                     chatContainer.style.backgroundPosition = 'center';
                     chatContainer.style.backgroundRepeat = 'no-repeat';
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
         
         // Create identification popup if it doesn't exist
-        const partnerProfilePicPath = isLocal ? `../../customers/${id}/img/02.jpg` : `../customers/${id}/img/02.jpg`;
+        const partnerProfilePicPath = window.getCloudinaryUrl('w_400', `customers/${window.customerId}/img/02.jpg`);
         const dataPath = isLocal ? `../../customers/${id}/data.json` : `../customers/${id}/data.json`;
         
         // Fetch identification data from JSON
@@ -191,13 +191,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ${detailsHTML}
                                 <div class="verification-status">
                                     <span class="verification-icon">
-                                        <img src="assets/img/loading_icon.png" alt="Loading" class="loading-icon">
+                                        <img src="https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/loading_icon.png" alt="Loading" class="loading-icon">
                                     </span>
                                     <span class="verification-text">กำลังตรวจสอบ...</span>
                                 </div>
                             </div>
                         </div>
                     `;
+                    
                     document.querySelector('.unlock-overlay').appendChild(identification);
                 }
             })
@@ -218,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p>Error loading identification data</p>
                                 <div class="verification-status">
                                     <span class="verification-icon">
-                                        <img src="assets/img/loading_icon.png" alt="Loading" class="loading-icon">
+                                        <img src="https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/loading_icon.png" alt="Loading" class="loading-icon">
                                     </span>
                                     <span class="verification-text">กำลังตรวจสอบ...</span>
                                 </div>
@@ -357,11 +358,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }
     });
-    
-    // Set profile picture source
-    const profilePicPath = isLocal ? `../../customers/${id}/img/01.jpg` : `../customers/${id}/img/01.jpg`;
-    profilePic.src = profilePicPath;
-    chatProfile.src = profilePicPath;
+
+    const profilePicUrl = window.getCloudinaryUrl('w_200', `customers/${window.customerId}/img/01.jpg`);
+    profilePic.src = profilePicUrl;
+    chatProfile.src = profilePicUrl;
     
     // Handle image loading errors
     profilePic.onerror = function() {
@@ -402,24 +402,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+let heartInterval = null;
+
 function startHeartAnimation() {
+    // กันพลาด: ถ้ามี Interval เดิมค้างอยู่ ให้ Clear ทิ้งก่อนเริ่มใหม่ทุกครั้ง
+    if (heartInterval) clearInterval(heartInterval);
+
     const screenWidth = window.innerWidth;
     const generationInterval = 1500 / (screenWidth / 150); 
-    const heartImagePath = "./assets/img/heart_red.png";
+    const heartImagePath = "https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/heart_red.png";
 
-    setInterval(() => {
+    heartInterval = setInterval(() => {
         const heart = document.createElement('div');
-        const size = Math.floor(Math.random() * 31) + 30; // 30-60px
+        // ... Logic การสร้างหัวใจเดิมของคุณ ...
+        const size = Math.floor(Math.random() * 31) + 30;
         const duration = 8 * (size / 30);
         const posX = Math.random() * screenWidth;
         const rotate = (Math.random() * 40 - 20);
 
         heart.className = 'floating-heart';
-        
         heart.style.cssText = `
-            width: ${size}px;
-            height: ${size}px;
-            left: ${posX}px;
+            width: ${size}px; height: ${size}px; left: ${posX}px;
             background-image: url('${heartImagePath}');
             animation: floatUp ${duration}s linear forwards;
             --random-rotate: ${rotate}deg;
@@ -427,6 +430,20 @@ function startHeartAnimation() {
 
         document.body.appendChild(heart);
         heart.addEventListener('animationend', () => heart.remove(), { once: true });
-        
     }, generationInterval);
 }
+
+function stopHeartAnimation() {
+    if (heartInterval) {
+        clearInterval(heartInterval);
+        heartInterval = null;
+    }
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        stopHeartAnimation();
+    } else {
+        startHeartAnimation();
+    }
+});

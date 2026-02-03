@@ -18,7 +18,7 @@
     width: 100%;
     height: 100%;
     /* background-color: #FCFBF4; */
-    background-image: url('../assets/img/letter_bg.png');
+    background-image: url('https://res.cloudinary.com/dbfwylcui/image/upload/w_1000,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/letter_bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -164,14 +164,14 @@
 
 /* ตัวอักษรที่กำลังพิมพ์ */
 .char-fade {
-    opacity: 0;
-    animation: fadeInChar 0.8s ease forwards; /* ปรับเวลา 0.8s ให้ช้า/เร็วตามชอบ */
+    opacity: 1;
+    /* animation: fadeInChar 0.8s ease forwards; */
 }
 
-@keyframes fadeInChar {
-    from { opacity: 0; transform: translateY(2px); } /* แถมเลื่อนขึ้นนิดๆ จะดูละมุนมาก */
+/* @keyframes fadeInChar {
+    from { opacity: 0; transform: translateY(2px); }
     to { opacity: 1; transform: translateY(0); }
-}
+} */
 
 /* ส่วนตัวอักษรล่องหน (Ghost) สำหรับจองที่ */
 .char-ghost {
@@ -213,7 +213,7 @@
     display: inline; /* สำคัญ: เพื่อให้ลอยขึ้นได้ (translate) */
     opacity: 0;
     /* transform: translateY(4px); เริ่มต้นต่ำกว่าปกติเล็กน้อย */
-    transition: opacity 0.4s ease, transform 0.4s ease; /* ใช้ transition แทน animation */
+    transition: transform 0.4s ease; /* ใช้ transition แทน animation */
     white-space: pre; /* รักษาระยะห่าง */
 }
 

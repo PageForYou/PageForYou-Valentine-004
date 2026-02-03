@@ -1,7 +1,5 @@
 let isReachLimitCurrent = false;
 const isLocal = location.hostname === 'localhost';
-const urlParams = new URLSearchParams(window.location.search);
-const customerId = urlParams.get('id');
 
 const romanticAudio = window.AppAssets.audio.BG_SOUND_romantic;
 const LOOP_START = 1.5;
@@ -17,7 +15,7 @@ setInterval(() => {
 
 async function loadChatMessages() {
     try {
-        const basePath = window.location.hostname === 'localhost' ? `../../customers/${customerId}/data.json` : `../customers/${customerId}/data.json`;
+        const basePath = window.location.hostname === 'localhost' ? `../../customers/${window.customerId}/data.json` : `../customers/${window.customerId}/data.json`;
         
         const response = await fetch(basePath);
         if (!response.ok) {
@@ -83,7 +81,7 @@ function fadeAndSlowStop(audio, duration) {
 
 async function renderChatMessages(messages) {
     const messagesContainer = document.querySelector('.chat-messages');
-    const imagePath = isLocal ? `../customers/${customerId}/img/01.jpg` : `../customers/${customerId}/img/01.jpg`;
+    const imagePath = window.getCloudinaryUrl('w_200', `customers/${window.customerId}/img/01.jpg`);
     messagesContainer.innerHTML = '';
     
     for (let i = 0; i < messages.length; i++) {
@@ -115,7 +113,7 @@ async function renderChatMessages(messages) {
             window.isWaiting = true;
             messageDiv.innerHTML = `
                 <div class="letter-container">
-                    <img src="../public/assets/img/letter_close.png" class="letter-thumbnail">
+                    <img src="https://res.cloudinary.com/dbfwylcui/image/upload/w_500,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/letter_close.png" class="letter-thumbnail">
                 </div>
             `;
             messageDiv.dataset.letterInsideImage = msg.letterInsideImage;
@@ -124,7 +122,7 @@ async function renderChatMessages(messages) {
             window.isWaiting = true;
             messageDiv.innerHTML = `
                 <div class="quiz-thumbnail">
-                    <img src="../public/assets/img/quiz_1.png" alt="Quiz" class="quiz-thumbnail-image">
+                    <img src="https://res.cloudinary.com/dbfwylcui/image/upload/w_500,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/quiz_1.png" alt="Quiz" class="quiz-thumbnail-image">
                 </div>
             `;
             
@@ -150,10 +148,10 @@ async function renderChatMessages(messages) {
                 const shuffledImage = shuffledGiftImages[index];
                 return `
                     <div class="gift-item" data-index="${index}" data-opened="false">
-                        <img src="${gift.gift_close_image}" alt="Gift" class="gift-close">
-                        <img src="${gift.gift_open_image}" alt="Opened Gift" class="gift-open" style="display: none;">
+                        <img src="${window.getAssetUrl("w_500", gift.gift_close_image)}" alt="Gift" class="gift-close">
+                        <img src="${window.getAssetUrl("w_500", gift.gift_open_image)}" alt="Opened Gift" class="gift-open" style="display: none;">
                         <div class="gift-content-wrapper">
-                            <img src="${shuffledImage}" alt="Gift Content" class="gift-content" style="display: none;">
+                            <img src="${window.getAssetUrl("w_500", shuffledImage)}" alt="Gift Content" class="gift-content" style="display: none;">
                         </div>
                     </div>
                 `;
@@ -338,7 +336,7 @@ function initializeGallery(galleryContainer) {
 }
 
 function initializeLetter(letterContainer) {
-    const basePath = isLocal ? `../customers/${customerId}/img/` : `../customers/${customerId}/img/`;
+    const letterImageUrl = window.getCloudinaryUrl("w_1200", `customers/${window.customerId}/img/${letterContainer.dataset.letterInsideImage}`);
     const thumbnail = letterContainer.querySelector('.letter-thumbnail');
     const overlay = document.querySelector('.letter-overlay');
     const itemsContainer = overlay.querySelector('.letter-items-container');
@@ -369,7 +367,7 @@ function initializeLetter(letterContainer) {
     thumbnail.addEventListener('click', async () => {
         // 1. จัดการรูปและเสียงเปิด
         if (!thumbnail.src.includes("letter_open.png")) {
-            thumbnail.src = "../public/assets/img/letter_open.png";
+            thumbnail.src = "https://res.cloudinary.com/dbfwylcui/image/upload/w_500,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/letter_open.png";
             await new Promise(resolve => setTimeout(resolve, 300));
         }
         window.AppAssets.audio.letter_open.currentTime = 0.3;
@@ -386,8 +384,8 @@ function initializeLetter(letterContainer) {
         itemsContainer.innerHTML = `
             <div class="letter-content-wrapper">
                 <div class="letter-image-container">
-                    <img src="../public/assets/img/polaroid.png" class="letter-inside-image">
-                    <img src="${basePath + letterContainer.dataset.letterInsideImage}" class="user-photo">
+                    <img src="https://res.cloudinary.com/dbfwylcui/image/upload/w_600,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/polaroid.png" class="letter-inside-image">
+                    <img src="${letterImageUrl}" class="user-photo">
                 </div>
                 <div class="letter-text-container">
                     <div class="letter-text" id="typing-text"></div>
@@ -539,7 +537,7 @@ function createGalleryItem(item, index) {
     itemElement.style.marginBottom = '30px';
     itemElement.style.width = '100%';
     itemElement.style.maxWidth = '800px';
-    const basePath = isLocal ? `../customers/${customerId}/img/` : `../customers/${customerId}/img/`;
+    const imageUrl = window.getCloudinaryUrl('w_1200', `customers/${window.customerId}/img/${item.imageName}.jpg`)
     
     // Different layouts based on alignment
     if (item.align === 'left' || item.align === 'right') {
@@ -549,7 +547,7 @@ function createGalleryItem(item, index) {
         
         itemElement.innerHTML = `
             <div style="flex: 0 0 50%;">
-                <img src="${basePath}${item.imageName}.jpg" 
+                <img src="${imageUrl}" 
                      alt="${item.title}" 
                      style="width: 100%; 
                             border-radius: 12px; 
@@ -566,7 +564,7 @@ function createGalleryItem(item, index) {
         itemElement.style.textAlign = 'center';
         itemElement.innerHTML = `
             <div style="margin-bottom: 15px;">
-                <img src="${basePath}${item.imageName}.jpg" 
+                <img src="${imageUrl}" 
                      alt="${item.title}" 
                      style="width: 100%; 
                             border-radius: 12px; 

@@ -23,3 +23,14 @@ window.chatWaitTime = 2000;
 window.giftContainterNo = 1;
 window.scanVerifyTime = 2000;
 window.scanWaitTime = 1000;
+let urlParams = new URLSearchParams(window.location.search);
+window.customerId = urlParams.get('id');
+window.cloudinaryBase = "https://res.cloudinary.com/dbfwylcui/image/upload/PageForYou-Valentine-004";
+window.cloudinaryBaseCustomer = `https://res.cloudinary.com/dbfwylcui/image/upload/PageForYou-Valentine-004/customers/${window.customerId}`;
+window.getCloudinaryUrl = function (size, path) {
+    return `https://res.cloudinary.com/dbfwylcui/image/upload/${size},f_auto,q_auto/PageForYou-Valentine-004/${path}`
+}
+window.getAssetUrl = function (size, imageName) {
+    return `https://res.cloudinary.com/dbfwylcui/image/upload/${size},f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/${imageName}`
+}
+// sample url: 'https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/'

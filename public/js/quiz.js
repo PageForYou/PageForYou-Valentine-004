@@ -101,7 +101,7 @@ class QuizManager {
         
         // Handle question image if exists
         if (question.question_type === 'ImageAndText' && question.question_image) {
-            const imagePath = `../customers/${window.customerId || 'example'}/img/${question.question_image}.jpg`;
+            const imagePath = window.getCloudinaryUrl('w_400', `customers/${window.customerId}/img/${question.question_image}.jpg`);
             this.quizQuestionImage.src = imagePath;
             this.quizQuestionImage.style.display = 'block';
             this.quizQuestionImage.onerror = () => {
@@ -193,15 +193,15 @@ class QuizManager {
             window.AppAssets.audio.correct.play();
             window.passQuiz = true;
             const quizThumbnailImage = document.querySelector('.quiz-thumbnail-image');
-            quizThumbnailImage.src = "../public/assets/img/quiz_finish_1.png";
+            quizThumbnailImage.src = window.getAssetUrl("w_500", "quiz_finish_1.png");
             this.quizMessage.textContent = 'ยินดีด้วย! คุณตอบถูกทุกข้อเลยนะ';
-            this.quizResultImage.src = './assets/img/cat_happy_1.png';
+            this.quizResultImage.src = window.getAssetUrl("w_300", "cat_happy_1.png");
             this.quizCloseButton.style.display = 'block';
             this.quizRestartButton.style.display = 'none';
         } else {
             window.AppAssets.audio.wrong.play();
             this.quizMessage.textContent = 'ยังไม่ผ่านนะ ลองใหม่อีกครั้งได้เลย!';
-            this.quizResultImage.src = './assets/img/cat_sad_1.png';
+            this.quizResultImage.src = window.getAssetUrl("w_300", "cat_sad_1.png");
             this.quizCloseButton.style.display = 'none';
             this.quizRestartButton.style.display = 'block';
         }

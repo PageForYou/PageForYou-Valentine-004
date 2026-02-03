@@ -343,7 +343,7 @@ body {
     display: block;
     width: 10cqw;
     height: 10cqw;
-    background-image: url('../assets/img/lock_icon.png');
+    background-image: url('https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/lock_icon.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

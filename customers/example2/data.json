@@ -14,9 +14,9 @@
             "sender": "giftbox", 
             "gifts": [
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/valentine_giftset_4.png"
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "valentine_giftset_4.png"
                 }
             ],
             "showLabel": false,
@@ -58,39 +58,39 @@
             "sender": "giftbox", 
             "gifts": [
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_cosmetics.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_cosmetics.png",
                     "gift_description": "พาไปซื้อเครื่องสำอาง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_dessert.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_dessert.png",
                     "gift_description": "พาไปกินของหวาน"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_food.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_food.png",
                     "gift_description": "กินอะไรก็ได้ฟรี 1 มื้อ"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_movie.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_movie.png",
                     "gift_description": "ดูหนังฟรี 1 เรื่อง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_wish.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_wish.png",
                     "gift_description": "ขออะไรก็ได้ 1 อย่าง"
                 },
                 {
-                    "gift_close_image": "../public/assets/img/GiftBox_1_pink_close.png", 
-                    "gift_open_image": "../public/assets/img/GiftBox_1_pink_open.png", 
-                    "gift_image": "../public/assets/img/prize_500_text.png",
+                    "gift_close_image": "GiftBox_1_pink_close.png", 
+                    "gift_open_image": "GiftBox_1_pink_open.png", 
+                    "gift_image": "prize_500_text.png",
                     "gift_description": "เงิน 500 บาท"
                 }
             ],

@@ -443,7 +443,9 @@ function stopHeartAnimation() {
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
         stopHeartAnimation();
+        window.AppAssets.audio.BG_SOUND_romantic.pause();
     } else {
         startHeartAnimation();
+        window.AppAssets.audio.BG_SOUND_romantic.play();
     }
 });

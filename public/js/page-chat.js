@@ -151,7 +151,7 @@ async function renderChatMessages(messages) {
                         <img src="${window.getAssetUrl("w_500", gift.gift_close_image)}" alt="Gift" class="gift-close">
                         <img src="${window.getAssetUrl("w_500", gift.gift_open_image)}" alt="Opened Gift" class="gift-open" style="display: none;">
                         <div class="gift-content-wrapper">
-                            <img src="${window.getAssetUrl("w_500", shuffledImage)}" alt="Gift Content" class="gift-content" style="display: none;">
+                            <img src="${window.getAssetUrl("w_900", shuffledImage)}" alt="Gift Content" class="gift-content" style="display: none;">
                         </div>
                     </div>
                 `;

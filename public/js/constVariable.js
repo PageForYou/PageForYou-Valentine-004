@@ -33,4 +33,7 @@ window.getCloudinaryUrl = function (size, path) {
 window.getAssetUrl = function (size, imageName) {
     return `https://res.cloudinary.com/dbfwylcui/image/upload/${size},f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/${imageName}`
 }
+window.getCustomerImage = function (size, imageName) {
+    return `https://res.cloudinary.com/dbfwylcui/image/upload/${size},f_auto,q_auto/PageForYou-Valentine-004/customers/${window.customerId}/img/${imageName}`
+}
 // sample url: 'https://res.cloudinary.com/dbfwylcui/image/upload/w_100,f_auto,q_auto/PageForYou-Valentine-004/public/assets/img/'

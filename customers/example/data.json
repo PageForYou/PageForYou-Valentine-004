@@ -2,6 +2,12 @@
     "phoneBackground": "",
     "chatBackground": "chat_bg_pink.png",
     "Username": "Babe 💞",
+    "imageList": [
+        {"size": "w_400", "name": "01.jpg"},
+        {"size": "w_400", "name": "02.jpg"},
+        {"size": "w_1200", "name": "L01.jpg"},
+        {"size": "w_400", "name": "Q01.jpg"}
+    ],
     "identification": [
         { "title": "ข้อมูลการสแกนนิ้ว", "text": ""},
         { "title": "ชื่อเล่น: ", "text": "บี๋ริ"},

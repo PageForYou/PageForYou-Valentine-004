@@ -119,10 +119,10 @@ O หน้าของขวัญก็ต้องบอกด้วยว่
 // แก้ปัญหาเรื่อง font
 
 / change to cloudinary
-/ preload image from cloudinary
+- preload image from cloudinary
 / close song when change app or web
 / type fix (delete smoothing) (เช็คโทรศัพท์ด้วย)
-- แก้ปัญหาเมาส์ไม่คลิก
+O แก้ปัญหาเมาส์ไม่คลิก
 
 - เพิ่มปุ่มให้กดไปหน้าถัดไป ขึ้นหัวข้อว่า "ความทรงจำของเรา"
 - ในหน้าความทรงจำ คอนเฟิมการย้ายไปหน้าสุดท้าย

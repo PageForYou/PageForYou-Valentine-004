@@ -441,11 +441,18 @@ function stopHeartAnimation() {
 }
 
 document.addEventListener('visibilitychange', () => {
+    const myAudio = window.AppAssets.audio.BG_SOUND_romantic;
     if (document.visibilityState === 'hidden') {
         stopHeartAnimation();
-        window.AppAssets.audio.BG_SOUND_romantic.pause();
+        myAudio.pause();
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'none';
+        }
     } else {
         startHeartAnimation();
-        window.AppAssets.audio.BG_SOUND_romantic.play();
+        myAudio.play().catch(e => console.log("Audio resume blocked:", e));
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'playing';
+        }
     }
 });

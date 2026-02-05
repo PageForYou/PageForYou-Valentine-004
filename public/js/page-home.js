@@ -445,14 +445,14 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
         stopHeartAnimation();
         myAudio.pause();
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.playbackState = 'none';
-        }
+        // if ('mediaSession' in navigator) {
+        //     navigator.mediaSession.playbackState = 'none';
+        // }
     } else {
         startHeartAnimation();
         myAudio.play().catch(e => console.log("Audio resume blocked:", e));
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.playbackState = 'playing';
-        }
+        // if ('mediaSession' in navigator) {
+        //     navigator.mediaSession.playbackState = 'playing';
+        // }
     }
 });
